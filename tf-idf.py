@@ -22,16 +22,16 @@ count_flag = {}                 # fv_dfを計算する上で必要なフラグ�
 # 各文書の形態素解析と、単語の出現回数の計算
 for txt_id, txt in enumerate(text):
     # MeCabを使うための初期化
-    tagger = MeCab.Tagger()
+    tagger = MeCab.Tagger("-d /var/lib/mecab/dic/ipadic-utf8")
+    tagger.parse('')
     node = tagger.parseToNode(txt)
 
     fv = {}                     # 単語の出現回数を格納するためのディクショナリ
     words = 0                   # ある文書の単語の総出現回数
 
-    for word in fv_df.keys():
+    for word in list(fv_df.keys()):
         count_flag[word] = False
 
-    tagger.parse('')
     while node.next:
         node = node.next
         surface = node.surface # 形態素解析により得られた単語
@@ -40,7 +40,7 @@ for txt_id, txt in enumerate(text):
 
         fv[surface] = fv.get(surface, 0) + 1 # fvにキー値がsurfaceの要素があれば、それに1を加え、なければ新しくキー値がsurfaceの要素をディクショナリに加え、値を1にする
 
-        if surface in fv_df.keys(): # fv_dfにキー値がsurfaceの要素があれば
+        if surface in list(fv_df.keys()): # fv_dfにキー値がsurfaceの要素があれば
             if count_flag[surface] == False: # フラグを確認し，Falseであれば
                 fv_df[surface] += 1 # 出現文書数を1増やす
                 count_flag[surface] = True # フラグをTrueにする
@@ -56,11 +56,11 @@ for txt_id, fv in enumerate(fv_tf):
     tf = {}
     idf = {}
     tf_idf = {}
-    for key in fv.keys():
+    for key in list(fv.keys()):
         tf[key] = float(fv[key]) / word_count[txt_id] # tfの計算
         idf[key] = math.log(float(txt_num) / fv_df[key]) # idfの計算
         tf_idf[key] = (tf[key] * idf[key], tf[key], idf[key], fv[key], fv_df[key]) # tf-idfその他の計算
-    tf_idf = sorted(tf_idf.items(), key=lambda x:x[1][0], reverse=True) # 得られたディクショナリtf-idfを、tf[key]*idf[key](tf-idf値)で降順ソート(処理後にはtf-idfはリストオブジェクトになっている)
+    tf_idf = sorted(list(tf_idf.items()), key=lambda x:x[1][0], reverse=True) # 得られたディクショナリtf-idfを、tf[key]*idf[key](tf-idf値)で降順ソート(処理後にはtf-idfはリストオブジェクトになっている)
     fv_tf_idf.append(tf_idf)
 
 # 出力
