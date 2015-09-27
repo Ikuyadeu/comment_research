@@ -79,6 +79,6 @@ for line in lines:
 		comment = r'\([1-9]* inline comment(s)*\)'
 		#comment = r'\([1-9]* inline comment\)\s'
 		message = re.sub(comment,'',message)
-
+		message = re.sub(",",'","',message)
 		if message != '':
 			print str(line[0]) + "," + str(line[1]) + "," + message
