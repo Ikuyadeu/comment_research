@@ -9,6 +9,7 @@ import re
 import sys
 import csv
 import MySQLdb
+import treetaggerwrapper
 
 
 voteComments = [[],[]]
@@ -49,24 +50,21 @@ cnct = MySQLdb.connect(db="qt",user="root", passwd="password")
 csr = cnct.cursor()
 time_csr = cnct.cursor()
 
-"""
-sql = "select ReviewId, AuthorId, Message "\
-	  "from Comment "\
-	  "where AuthorId != '-1';"
-	  #"where ReviewId < '100' "\
-	  #"and AuthorId != '-1';"
-
-"""
 sql = "select ReviewId, AuthorId, Message "\
 	  "from Comment "\
 	  "where ReviewId < '100' "\
-	  "and AuthorId != '-1';"
+	  "and AuthorId != '-1' "\
+	  "and AuthorId != '1000049';"
 
 
 csr.execute(sql)
 lines = csr.fetchall()
+tagger = treetaggerwrapper.TreeTagger(TAGLANG='en',TAGDIR='../treetagger')
+
 
 for line in lines:
+	authorId = line[0]
+	reviewId = line[1]
 	message = line[2]
 	if JudgeVoteScore(message) != 0:
 		message = re.sub(r'\n','',message)
@@ -80,5 +78,13 @@ for line in lines:
 		#comment = r'\([1-9]* inline comment\)\s'
 		message = re.sub(comment,'',message)
 		message = re.sub(",",'","',message)
+
 		if message != '':
-			print str(line[0]) + "," + str(line[1]) + "," + message
+			tagText = tagger.tag_text(message.decode('utf-8'))
+			tags = treetaggerwrapper.make_tags(tagText, exclude_nottags=False)
+
+			#print tagText
+			for tag in tags:
+				if type(tag) != treetaggerwrapper.NotTag:
+					print(tag.word)
+			print ""
