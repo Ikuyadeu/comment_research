@@ -60,32 +60,35 @@ sql = "select ReviewId, AuthorId, Message "\
 csr.execute(sql)
 lines = csr.fetchall()
 tagger = treetaggerwrapper.TreeTagger(TAGLANG='en',TAGDIR='../treetagger')
+fv = {}
 
 
 for line in lines:
 	authorId = line[0]
 	reviewId = line[1]
 	message = line[2]
-	
-	if JudgeVoteScore(message) != 0:
-		message = re.sub(r'\n','',message)
-		# delete vote coments
-		for comments in voteComments:
-			for comment in comments:
-				message = re.sub(comment,'',message)
-				message = message.replace(comment, '')
 
-		comment = r'\([1-9]* inline comment(s)*\)'
-		message = re.sub(comment,'',message)
-		message = re.sub(",",'","',message)
+	if JudgeVoteScore(message) == 0:
+		continue
 
-		if message != '':
-			#set message tag
-			tagText = tagger.tag_text(message.decode('utf-8'))
-			tags = treetaggerwrapper.make_tags(tagText, exclude_nottags=False)
+	message = re.sub(r'\n','',message)
+	# delete vote coments
+	for comments in voteComments:
+		for comment in comments:
+			message = re.sub(comment,'',message)
+			message = message.replace(comment, '')
 
-			#print words
-			for tag in tags:
-				if type(tag) != treetaggerwrapper.NotTag:
-					print(tag.word)
-			print ""
+	comment = r'\([1-9]* inline comment(s)*\)'
+	message = re.sub(comment,'',message)
+
+	if message == '':
+		continue
+
+	#set message tag
+	tagText = tagger.tag_text(message.decode('utf-8'))
+	tags = treetaggerwrapper.make_tags(tagText, exclude_nottags=True)
+
+	#print words
+	for tag in tags:
+		print(tag.lemma)
+	print ""
