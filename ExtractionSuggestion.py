@@ -8,8 +8,25 @@
 import re
 import sys
 import csv
+import math
 import MySQLdb
 import treetaggerwrapper
+
+# Term Frequency
+def tf(word, document):
+    return document.words.count(word) / len(document.words)
+
+def n_containing(word, documents):
+    return sum(1 for document in documents if word in document)
+
+# Inverse Document Frequency
+def idf(word, documents):
+    return math.log(len(documents) / (1 + n_containing(word, documents)))
+
+def tfidf(word, document, documents):
+    return tf(word, document) * idf(word, documents)
+
+
 
 
 voteComments = [[],[]]
@@ -62,7 +79,6 @@ lines = csr.fetchall()
 tagger = treetaggerwrapper.TreeTagger(TAGLANG='en',TAGDIR='../treetagger')
 fv = {}
 
-
 for line in lines:
 	authorId = line[0]
 	reviewId = line[1]
@@ -91,4 +107,10 @@ for line in lines:
 	#print words
 	for tag in tags:
 		print(tag.lemma)
+
+        if fv.has_key(tag):
+            fv[tag]+=1
+        else:
+            fv[tag]=1
+
 	print ""
