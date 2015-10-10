@@ -132,7 +132,7 @@ for txt_id, fv in enumerate(fv_tf):
 		tf = float(fv[key]) / word_count[txt_id] # tfの計算
 		idf = math.log(float(txt_num) / fv_df[key]) # idfの計算
 		tf_idf = tf * idf  # tf-idfその他の計算
-		if tf_idf > wordList[key]:
+		if tf_idf > wordList[key]: # update tf_idf to max
 			wordList[key] = tf_idf
 
 for word, value in sorted(list(wordList.items()), key=lambda x:x[1]):
