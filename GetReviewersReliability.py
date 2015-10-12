@@ -7,13 +7,9 @@
 #comment is not correct
 
 ### Import lib
-import re
-import sys
 import csv
-import time
 import MySQLdb
 from collections import defaultdict
-from datetime import datetime
 from Util import ReviewerFunctions
 from Class import ReviewerClass
 
@@ -55,69 +51,61 @@ for Id in range(1, 1000):
 		status = information[1]
 
 	### Analysis
-	if status == "merged" or status == "abandoned": # We target the patches which were decided merged or abandoned
-		for comment in comments:
-			message = comment[2]
-			# Judge whether or not this patch was desided by decision comment<"merged, abandoned"> which mean [status] of reviewdata.
-			# And, We regard that "updated ---" comment is also decision comment.
-			# And, We regard that +2 score comment is the same as "merged", -2 score comment is the same as "abandoned".
-			# Summary -> "merged, abandoned, 'updated --- ', +2, -2" is {JudgeDicisionMaking commnet}
-			judge = ReviewerFunctions.JudgeDicisionMaking(message)
-			if judge == 0:
-				s = ReviewerFunctions.JudgeVoteScore(message)
-				if(s == 1 or s == -1):
-					reviewer = comment[1]
-					#print str(reviewer)+":"+str(message)
-					if reviewer in reviewers_written:	# A new Reviewer for this patch
-						pass
-					else:					# A Reviewer who has already written for this patch
-						reviewers_List.append(reviewer)
-						reviewers_score.append(s)
-						reviewers_written.append(reviewer)
+	if status not in ["merged" ,"abandoned"]: # We target the patches which were decided merged or abandoned
+		continue
 
-			else:
-				assert len(reviewers_List) == len(reviewers_score)
-				for (r, s) in zip(reviewers_List, reviewers_score):
-					if ReviewerFunctions.IsReviewerClass(r, reviewer_class):
-						if ReviewerFunctions.IsCorrectVoting(r, s, judge):
-							reviewer_class[r].addCur()
-						else:
-							#print type(reviewer_class[r])
-							reviewer_class[r].addIncur()
-					else:
-						ReviewerFunctions.MakeReviewerClass(r, reviewer_class)
-						#print str(Id)+"nothing"
-						if ReviewerFunctions.IsCorrectVoting(r, s, judge):
-							reviewer_class[r].addCur()
-						else:
-							reviewer_class[r].addIncur()
-		###
-		for (r, s) in zip(reviewers_List, reviewers_score):
-			if status == "merged":
-				judge = 2
-			elif status == "abandoned":
-				judge = -2
-			if ReviewerFunctions.IsReviewerClass(r, reviewer_class):
+	for comment in comments:
+		message = comment[2]
+		# Judge whether or not this patch was desided by decision comment<"merged, abandoned"> which mean [status] of reviewdata.
+		# And, We regard that "updated ---" comment is also decision comment.
+		# And, We regard that +2 score comment is the same as "merged", -2 score comment is the same as "abandoned".
+		# Summary -> "merged, abandoned, 'updated --- ', +2, -2" is {JudgeDicisionMaking commnet}
+		judge = ReviewerFunctions.JudgeDicisionMaking(message)
+		if judge == 0:
+			s = ReviewerFunctions.JudgeVoteScore(message)
+			if(s == 1 or s == -1):
+				reviewer = comment[1]
+				#print str(reviewer)+":"+str(message)
+				if reviewer not in reviewers_written:	# A Reviewer who has already written for this patch
+					reviewers_List.append(reviewer)
+					reviewers_score.append(s)
+					reviewers_written.append(reviewer)
+
+		else:
+			assert len(reviewers_List) == len(reviewers_score)
+			for (r, s) in zip(reviewers_List, reviewers_score):
+				if not ReviewerFunctions.IsReviewerClass(r, reviewer_class):
+					ReviewerFunctions.MakeReviewerClass(r, reviewer_class)
+
 				if ReviewerFunctions.IsCorrectVoting(r, s, judge):
 					reviewer_class[r].addCur()
 				else:
 					reviewer_class[r].addIncur()
-			else:
-				ReviewerFunctions.MakeReviewerClass(r, reviewer_class)
-				if ReviewerFunctions.IsCorrectVoting(r, s, judge):
-					reviewer_class[r].addCur()
-				else:
-					reviewer_class[r].addIncur()
-		# Init reviewers_List, reviewers_score
-		#reviewers_List = []
-		#reviewers_score = []
+	###
+	for (r, s) in zip(reviewers_List, reviewers_score):
+		if status == "merged":
+			judge = 2
+		else:     # status is abandoned
+			judge = -2
+
+		if not ReviewerFunctions.IsReviewerClass(r, reviewer_class):
+			ReviewerFunctions.MakeReviewerClass(r, reviewer_class)
+
+		if ReviewerFunctions.IsCorrectVoting(r, s, judge):
+			reviewer_class[r].addCur()
+		else:
+			reviewer_class[r].addIncur()
+
+	# Init reviewers_List, reviewers_score
+	#reviewers_List = []
+	#reviewers_score = []
 
 ### Culcurate Former and Latter
 
 ### Output
 #print "ReviewId,NumOfCur,NumOfIncur"
 n = 10
-print "id,currentNum,incurrentNum,currentPar,incurrentPar"
+print "id,currentNum,incurrentNum,currentPar,incurrentPar" # print clumn name
 for i in reviewer_class:
 	currentPar = reviewer_class[i].cur/float(reviewer_class[i].cur+reviewer_class[i].incur)
 	incurrentPar = reviewer_class[i].incur/float(reviewer_class[i].cur+reviewer_class[i].incur)
