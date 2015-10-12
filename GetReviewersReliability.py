@@ -7,6 +7,7 @@
 #comment is not correct
 
 ### Import lib
+import sys
 import csv
 import MySQLdb
 from collections import defaultdict
@@ -21,12 +22,20 @@ reviewer = []
 cnct = MySQLdb.connect(db="qt",user="root", passwd="password")
 csr = cnct.cursor()
 
+### Set default ReviewNum
 sql = "SELECT COUNT(*) FROM Review;"
 csr.execute(sql)
 ReviewNum = csr.fetchall()[0][0] # 70705 <= Number Of Qt project's patchsets
 
+# set original ReviewNum
+argv = sys.argv
+argc = len(argv)
+if argc == 2:
+	if ReviewNum > int(argv[1]):
+		ReviewNum = int(argv[1])
+
 ### Main
-for Id in range(1, ReviewNum/100):
+for Id in range(1, ReviewNum):
 	sql = "SELECT ReviewId, Status "\
 	"FROM Review "\
 	"WHERE ReviewId = '"+str(Id)+"';"
@@ -64,11 +73,9 @@ for Id in range(1, ReviewNum/100):
 			s = ReviewerFunctions.JudgeVoteScore(message)
 			if(s == 1 or s == -1):
 				reviewer = comment[1]
-				#print str(reviewer)+":"+str(message)
-				if reviewer not in reviewers_written:	# A Reviewer who has already written for this patch
-					reviewers_List.append(reviewer)
-					reviewers_score.append(s)
-					reviewers_written.append(reviewer)
+				reviewers_List.append(reviewer)
+				reviewers_score.append(s)
+				reviewers_written.append(reviewer)
 
 		else:
 			assert len(reviewers_List) == len(reviewers_score)
@@ -80,7 +87,7 @@ for Id in range(1, ReviewNum/100):
 					reviewer_class[r].addCur()
 				else:
 					reviewer_class[r].addIncur()
-	###
+
 	for (r, s) in zip(reviewers_List, reviewers_score):
 		if status == "merged":
 			judge = 2
@@ -98,7 +105,7 @@ for Id in range(1, ReviewNum/100):
 ### Culcurate Former and Latter
 
 ### Output
-print "Reviewid,NumOfCurrent,NumOfincurrent,CurrentPar,IncurrentPar" # print clumn name
+print "Reviewerid,NumOfCurrent,NumOfincurrent,CurrentPar,IncurrentPar" # print clumn name
 for i in reviewer_class:
 	currentPar = reviewer_class[i].cur/float(reviewer_class[i].cur+reviewer_class[i].incur)
 	incurrentPar = reviewer_class[i].incur/float(reviewer_class[i].cur+reviewer_class[i].incur)
