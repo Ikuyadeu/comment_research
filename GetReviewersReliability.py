@@ -25,19 +25,23 @@ reviewer = []
 cnct = MySQLdb.connect(db="qt",user="root", passwd="password")
 csr = cnct.cursor()
 
+sql =	"SELECT COUNT(*) FROM Review;"
+csr.execute(sql)
+ReviewNum = csr.fetchall()[0] # 70705 <= Number Of Qt project's patchsets
+
 ### Main
 pre = 1
-for Id in range(1, 108): #70814 <- Number Of Qt project's patchsets
-	sql = 	"select ReviewId, Status "\
-			"from Review "\
-			"where ReviewId = '"+str(Id)+"';"
+for Id in range(1, 1000):
+	sql = 	"SELECT ReviewId, Status "\
+			"FROM Review "\
+			"WHERE ReviewId = '"+str(Id)+"';"
 	csr.execute(sql)
 	info = csr.fetchall()
 
-	sql = 	"select ReviewId, AuthorId, Message "\
-			"from Comment "\
-			"where ReviewId = '"+str(Id)+"' "\
-			"order by WrittenOn asc;"
+	sql = 	"SELECT ReviewId, AuthorId, Message "\
+			"FROM Comment "\
+			"WHERE ReviewId = '"+str(Id)+"' "\
+			"ORDER BY WrittenOn asc;"
 	csr.execute(sql)
 	comments = csr.fetchall()
 
@@ -53,17 +57,17 @@ for Id in range(1, 108): #70814 <- Number Of Qt project's patchsets
 	### Analysis
 	if status == "merged" or status == "abandoned": # We target the patches which were decided merged or abandoned
 		for comment in comments:
-			m = comment[2]
+			message = comment[2]
 			# Judge whether or not this patch was desided by decision comment<"merged, abandoned"> which mean [status] of reviewdata.
 			# And, We regard that "updated ---" comment is also decision comment.
 			# And, We regard that +2 score comment is the same as "merged", -2 score comment is the same as "abandoned".
 			# Summary -> "merged, abandoned, 'updated --- ', +2, -2" is {JudgeDicisionMaking commnet}
-			judge = ReviewerFunctions.JudgeDicisionMaking(m)
+			judge = ReviewerFunctions.JudgeDicisionMaking(message)
 			if judge == 0:
-				s = ReviewerFunctions.JudgeVoteScore(m)
+				s = ReviewerFunctions.JudgeVoteScore(message)
 				if(s == 1 or s == -1):
 					reviewer = comment[1]
-					#print str(reviewer)+":"+str(m)
+					#print str(reviewer)+":"+str(message)
 					if reviewer in reviewers_written:	# A new Reviewer for this patch
 						pass
 					else:					# A Reviewer who has already written for this patch
@@ -113,8 +117,11 @@ for Id in range(1, 108): #70814 <- Number Of Qt project's patchsets
 ### Output
 #print "ReviewId,NumOfCur,NumOfIncur"
 n = 10
+print "id,currentNum,incurrentNum,currentPar,incurrentPar"
 for i in reviewer_class:
-	print("%d,%d,%d,%f,%f" % (i, reviewer_class[i].cur, reviewer_class[i].incur,reviewer_class[i].cur/float(reviewer_class[i].cur+reviewer_class[i].incur), reviewer_class[i].incur/float(reviewer_class[i].cur+reviewer_class[i].incur))),
+	currentPar = reviewer_class[i].cur/float(reviewer_class[i].cur+reviewer_class[i].incur)
+	incurrentPar = reviewer_class[i].incur/float(reviewer_class[i].cur+reviewer_class[i].incur)
+	print "%d,%d,%d,%f,%f" % (i, reviewer_class[i].cur, reviewer_class[i].incur,currentPar,incurrentPar)
 	#sum = reviewer_class[i].cur + reviewer_class[i].incur
 	#if sum >= 20:
 	#	reviewer_class[i].SetPerFormer(n)
