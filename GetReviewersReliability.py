@@ -21,23 +21,22 @@ reviewer = []
 cnct = MySQLdb.connect(db="qt",user="root", passwd="password")
 csr = cnct.cursor()
 
-sql =	"SELECT COUNT(*) FROM Review;"
+sql = "SELECT COUNT(*) FROM Review;"
 csr.execute(sql)
-ReviewNum = csr.fetchall()[0] # 70705 <= Number Of Qt project's patchsets
+ReviewNum = csr.fetchall()[0][0] # 70705 <= Number Of Qt project's patchsets
 
 ### Main
-pre = 1
-for Id in range(1, 1000):
-	sql = 	"SELECT ReviewId, Status "\
-			"FROM Review "\
-			"WHERE ReviewId = '"+str(Id)+"';"
+for Id in range(1, ReviewNum/100):
+	sql = "SELECT ReviewId, Status "\
+	"FROM Review "\
+	"WHERE ReviewId = '"+str(Id)+"';"
 	csr.execute(sql)
 	info = csr.fetchall()
 
-	sql = 	"SELECT ReviewId, AuthorId, Message "\
-			"FROM Comment "\
-			"WHERE ReviewId = '"+str(Id)+"' "\
-			"ORDER BY WrittenOn asc;"
+	sql = "SELECT ReviewId, AuthorId, Message "\
+	"FROM Comment "\
+	"WHERE ReviewId = '"+str(Id)+"' "\
+	"ORDER BY WrittenOn asc;"
 	csr.execute(sql)
 	comments = csr.fetchall()
 
@@ -96,22 +95,11 @@ for Id in range(1, 1000):
 		else:
 			reviewer_class[r].addIncur()
 
-	# Init reviewers_List, reviewers_score
-	#reviewers_List = []
-	#reviewers_score = []
-
 ### Culcurate Former and Latter
 
 ### Output
-#print "ReviewId,NumOfCur,NumOfIncur"
-n = 10
-print "id,currentNum,incurrentNum,currentPar,incurrentPar" # print clumn name
+print "Reviewid,NumOfCurrent,NumOfincurrent,CurrentPar,IncurrentPar" # print clumn name
 for i in reviewer_class:
 	currentPar = reviewer_class[i].cur/float(reviewer_class[i].cur+reviewer_class[i].incur)
 	incurrentPar = reviewer_class[i].incur/float(reviewer_class[i].cur+reviewer_class[i].incur)
 	print "%d,%d,%d,%f,%f" % (i, reviewer_class[i].cur, reviewer_class[i].incur,currentPar,incurrentPar)
-	#sum = reviewer_class[i].cur + reviewer_class[i].incur
-	#if sum >= 20:
-	#	reviewer_class[i].SetPerFormer(n)
-	#	reviewer_class[i].SetPerLatter(n)
-	#	print("%f,%f" % (reviewer_class[i].per_former, reviewer_class[i].per_latter))
