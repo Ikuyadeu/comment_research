@@ -19,7 +19,7 @@ from Class import ReviewerClass
 ######
 # If Score is '+1' -> return 1
 # If Score is '-1' -> return -1
-# If Score isn't '+1' or '-1' -> return 0 
+# If Score isn't '+1' or '-1' -> return 0
 ######
 def JudgeVoteScore(m): # (Regular expression)
     # Score +1
@@ -71,13 +71,13 @@ def IsReviewerClass(r, reviewer_class):
 	if reviewer_class[r] != 0:
 		return True
 	else:
-		print "False"
+		#print "False"
 		return False
 
 def MakeReviewerClass(r, reviewer_class):
 	assert r > 0 and reviewer_class[r] == 0
 	reviewer_class[r] = ReviewerClass.Reviewer(r)
-	print type(ReviewerClass.Reviewer(r))
+	#print type(ReviewerClass.Reviewer(r))
 	return r
 
 def IsCorrectVoting(r, s, judge):

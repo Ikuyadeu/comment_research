@@ -25,14 +25,13 @@ if len(sys.argv) != 2 or (sys.argv[1] != "-y" and sys.argv[1] != "-n"):
 	exit()
 
 ### Connect DB
-cnct = MySQLdb.connect(db="qt",user="root", passwd="")
+cnct = MySQLdb.connect(db="qt",user="root", passwd="password")
 csr = cnct.cursor()
 
 ### Main
 pre = 1
 for Id in range(1, 70814): #70814 <- Number Of Qt project's patchsets
-	sql = "select ReviewId, Status from Review where ReviewId = '"+str(Id)+"';"
-	csr.execute(sql)
+	csr.execute("select ReviewId, Status from Review where ReviewId = '"+str(Id)+"';")
 	info = csr.fetchall()
 	csr.execute("select ReviewId, AuthorId, Message from Comment where ReviewId = '"+str(Id)+"' order by WrittenOn asc;")
 	comments = csr.fetchall()

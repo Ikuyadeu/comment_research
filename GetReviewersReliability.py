@@ -1,7 +1,6 @@
-#!/usr/bin/python3
 ##################
-# Author:Toshiki Hirao
-# CreatedOn: 2015/09/18
+# Author:Ueda Yuki
+# CreatedOn: 2015/10/10
 # Summary: This program is to count current judge and incurrent judge.
 ##################
 
@@ -20,21 +19,28 @@ from Class import ReviewerClass
 
 ### Init
 reviewer_class = defaultdict(lambda: 0)
-if len(sys.argv) != 2 or (sys.argv[1] != "-y" and sys.argv[1] != "-n"):
-	print "Error:You should put option only '-y' or '-n'"
-	exit()
+reviewer = []
 
 ### Connect DB
-cnct = MySQLdb.connect(db="qt",user="root", passwd="")
+cnct = MySQLdb.connect(db="qt",user="root", passwd="password")
 csr = cnct.cursor()
 
 ### Main
 pre = 1
-for Id in range(1, 70814): #70814 <- Number Of Qt project's patchsets
-	csr.execute("select ReviewId, Status from Review where ReviewId = '"+str(Id)+"';")
+for Id in range(1, 108): #70814 <- Number Of Qt project's patchsets
+	sql = 	"select ReviewId, Status "\
+			"from Review "\
+			"where ReviewId = '"+str(Id)+"';"
+	csr.execute(sql)
 	info = csr.fetchall()
-	csr.execute("select ReviewId, AuthorId, Message from Comment where ReviewId = '"+str(Id)+"' order by WrittenOn asc;")
+
+	sql = 	"select ReviewId, AuthorId, Message "\
+			"from Comment "\
+			"where ReviewId = '"+str(Id)+"' "\
+			"order by WrittenOn asc;"
+	csr.execute(sql)
 	comments = csr.fetchall()
+
 	reviewers_written = []	# Reviewer which has already written a comment in the patch
 	reviewers_List = [] 	# Reviewer which wrote comments in the patch Set (patch not equal patch Set)
 	reviewers_score = []
@@ -47,12 +53,12 @@ for Id in range(1, 70814): #70814 <- Number Of Qt project's patchsets
 	### Analysis
 	if status == "merged" or status == "abandoned": # We target the patches which were decided merged or abandoned
 		for comment in comments:
-			m = comment[2].replace("\n", "<br>")
+			m = comment[2]
 			# Judge whether or not this patch was desided by decision comment<"merged, abandoned"> which mean [status] of reviewdata.
 			# And, We regard that "updated ---" comment is also decision comment.
 			# And, We regard that +2 score comment is the same as "merged", -2 score comment is the same as "abandoned".
 			# Summary -> "merged, abandoned, 'updated --- ', +2, -2" is {JudgeDicisionMaking commnet}
-			judge = ReviewerFunctions.JudgeDicisionMaking(m) 
+			judge = ReviewerFunctions.JudgeDicisionMaking(m)
 			if judge == 0:
 				s = ReviewerFunctions.JudgeVoteScore(m)
 				if(s == 1 or s == -1):
@@ -81,13 +87,6 @@ for Id in range(1, 70814): #70814 <- Number Of Qt project's patchsets
 							reviewer_class[r].addCur()
 						else:
 							reviewer_class[r].addIncur()
-				# Init reviewers_List, reviewers_score
-				# If you want to use all comment per a reviewer, you should remove this two sentences.
-				if sys.argv[1] == "-y":
-					reviewers_List = []
-					reviewers_score = []
-				elif sys.argv[1] == "-n":
-					pass
 		###
 		for (r, s) in zip(reviewers_List, reviewers_score):
 			if status == "merged":
@@ -115,9 +114,9 @@ for Id in range(1, 70814): #70814 <- Number Of Qt project's patchsets
 #print "ReviewId,NumOfCur,NumOfIncur"
 n = 10
 for i in reviewer_class:
-	#print("%d,%d,%d,%f,%f" % (i, reviewer_class[i].cur, reviewer_class[i].incur,reviewer_class[i].cur/float(reviewer_class[i].cur+reviewer_class[i].incur), reviewer_class[i].incur/float(reviewer_class[i].cur+reviewer_class[i].incur))),
-	sum = reviewer_class[i].cur + reviewer_class[i].incur
-	if sum >= 20:
-		reviewer_class[i].SetPerFormer(n)
-		reviewer_class[i].SetPerLatter(n)
-		print("%f,%f" % (reviewer_class[i].per_former, reviewer_class[i].per_latter))
+	print("%d,%d,%d,%f,%f" % (i, reviewer_class[i].cur, reviewer_class[i].incur,reviewer_class[i].cur/float(reviewer_class[i].cur+reviewer_class[i].incur), reviewer_class[i].incur/float(reviewer_class[i].cur+reviewer_class[i].incur))),
+	#sum = reviewer_class[i].cur + reviewer_class[i].incur
+	#if sum >= 20:
+	#	reviewer_class[i].SetPerFormer(n)
+	#	reviewer_class[i].SetPerLatter(n)
+	#	print("%f,%f" % (reviewer_class[i].per_former, reviewer_class[i].per_latter))
