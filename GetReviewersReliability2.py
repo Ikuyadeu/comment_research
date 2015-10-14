@@ -1,6 +1,6 @@
 ##################
 # Author:Ueda Yuki
-# CreatedOn: 2015/10/10
+# CreatedOn: 2015/10/14
 # Summary: This program is to count current judge and incurrent judge.
 ##################
 
@@ -33,6 +33,9 @@ argc = len(argv)
 if argc == 2:
 	if ReviewNum > int(argv[1]):
 		ReviewNum = int(argv[1])
+
+# Number of Comments to the patch one
+voteCommentNum = 1
 
 ### Main
 for Id in range(1, ReviewNum):
