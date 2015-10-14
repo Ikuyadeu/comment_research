@@ -31,13 +31,15 @@ ReviewNum = csr.fetchall()[0][0] # 70705 <= Number Of Qt project's patchsets
 argv = sys.argv
 argc = len(argv)
 if argc == 2:
-	if ReviewNum > int(argv[1]):
-		ReviewNum = int(argv[1])
+	ReserchCommentNum = int(argv[1])
+else:
+	ReserchCommentNum = 3
 
 # Number of Comments to the patch one
-voteCommentNum = 1
 
 ### Main
+print "ReviewId,Reviewerid,CommentIndex,NumOfCurrent,NumOfincurrent,CurrentPar,IncurrentPar,Status" # print clumn name
+
 for Id in range(1, ReviewNum):
 	sql = "SELECT ReviewId, Status "\
 	"FROM Review "\
@@ -62,8 +64,9 @@ for Id in range(1, ReviewNum):
 	for information in info:
 		status = information[1]
 
+	CommentNum = len(comments)
 	### Analysis
-	for comment in comments:
+	for i, comment in enumerate(comments):
 		message = comment[2]
 		# Judge whether or not this patch was desided by decision comment<"merged, abandoned"> which mean [status] of reviewdata.
 		# And, We regard that "updated ---" comment is also decision comment.
@@ -84,10 +87,16 @@ for Id in range(1, ReviewNum):
 				if not ReviewerFunctions.IsReviewerClass(r, reviewer_class):
 					ReviewerFunctions.MakeReviewerClass(r, reviewer_class)
 
+				reviewer = reviewer_class[r]
 				if ReviewerFunctions.IsCorrectVoting(r, s, judge):
-					reviewer_class[r].addCur()
+					reviewer.addCur()
 				else:
-					reviewer_class[r].addIncur()
+					reviewer.addIncur()
+
+				if CommentNum == ReserchCommentNum:
+					currentPar = reviewer.cur/float(reviewer.cur+reviewer.incur)
+					incurrentPar = reviewer.incur/float(reviewer.cur+reviewer.incur)
+					print "%4d,%2d,%3d,%3d,%f,%f,%s" % (Id, i+1, reviewer.cur, reviewer.incur, currentPar, incurrentPar, status)
 
 	for (r, s) in zip(reviewers_List, reviewers_score):
 		if status == "merged":
@@ -98,16 +107,13 @@ for Id in range(1, ReviewNum):
 		if not ReviewerFunctions.IsReviewerClass(r, reviewer_class):
 			ReviewerFunctions.MakeReviewerClass(r, reviewer_class)
 
+		reviewer = reviewer_class[r]
 		if ReviewerFunctions.IsCorrectVoting(r, s, judge):
-			reviewer_class[r].addCur()
+			reviewer.addCur()
 		else:
-			reviewer_class[r].addIncur()
+			reviewer.addIncur()
 
-### Culcurate Former and Latter
-
-### Output
-print "Reviewerid,NumOfCurrent,NumOfincurrent,CurrentPar,IncurrentPar" # print clumn name
-for i in reviewer_class:
-	currentPar = reviewer_class[i].cur/float(reviewer_class[i].cur+reviewer_class[i].incur)
-	incurrentPar = reviewer_class[i].incur/float(reviewer_class[i].cur+reviewer_class[i].incur)
-	print "%d,%d,%d,%f,%f" % (i, reviewer_class[i].cur, reviewer_class[i].incur,currentPar,incurrentPar)
+		if CommentNum == ReserchCommentNum:
+			currentPar = reviewer.cur/float(reviewer.cur+reviewer.incur)
+			incurrentPar = reviewer.incur/float(reviewer.cur+reviewer.incur)
+			print "%4d,%2d,%3d,%3d,%f,%f,%s" % (Id, i+1, reviewer.cur, reviewer.incur, currentPar, incurrentPar, status)
