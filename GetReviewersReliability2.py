@@ -38,9 +38,11 @@ else:
 # Number of Comments to the patch one
 
 ### Main
-print "ReviewId,Reviewerid,CommentIndex,NumOfCurrent,NumOfincurrent,CurrentPar,IncurrentPar,Status" # print clumn name
+# @ScoreOfReliability: the sum of all reviewers' reliability in each patch
+# @VotingScore: the score that a reviewer voted. (+1 or -1)
+print "ReviewId,Reviewerid,CommentIndex,NumOfCurrent,NumOfincurrent,CurrentPar,IncurrentPar,ScoreOfReliability,VotingScore,Status" # print clumn name
 
-for Id in range(1, ReviewNum):
+for Id in range(10000, ReviewNum):
 	sql = "SELECT ReviewId, Status "\
 	"FROM Review "\
 	"WHERE ReviewId = '"+str(Id)+"' "\
@@ -77,7 +79,8 @@ for Id in range(1, ReviewNum):
 	assert CommentNum == ReserchCommentNum
 
 	### Analysis (If CommentNum equals only ReserchCommentNum, the following code works)
-	index = 1
+	index = 1  # @index:CommentIndex
+	score = 0  # @score:ScoreOfReliabilitys
 	for i, comment in enumerate(comments):
 		message = comment[2]
 		# Judge whether or not this patch was desided by decision comment<"merged, abandoned"> which mean [status] of reviewdata.
@@ -108,8 +111,9 @@ for Id in range(1, ReviewNum):
 				if CommentNum == ReserchCommentNum:
 					currentPar = reviewer.cur/float(reviewer.cur+reviewer.incur)
 					incurrentPar = reviewer.incur/float(reviewer.cur+reviewer.incur)
+					score = score + currentPar
 					#print "%4d,%2d,%3d,%3d,%f,%f,%s" % (Id, i+1, reviewer.cur, reviewer.incur, currentPar, incurrentPar, status)
-					print "%4d,%d,%2d,%3d,%3d,%f,%f,%s" % (Id, r, index, reviewer.cur, reviewer.incur, currentPar, incurrentPar, status)
+					print "%4d,%d,%2d,%3d,%3d,%f,%f,%f,%d,%s" % (Id, r, index, reviewer.cur, reviewer.incur, currentPar, incurrentPar, score, s, status)
 					index = index + 1
 			reviewers_List = []
 			reviewers_score = []
@@ -132,7 +136,8 @@ for Id in range(1, ReviewNum):
 		if CommentNum == ReserchCommentNum:
 			currentPar = reviewer.cur/float(reviewer.cur+reviewer.incur)
 			incurrentPar = reviewer.incur/float(reviewer.cur+reviewer.incur)
+			score = score + currentPar
 			#print "%4d,%2d,%3d,%3d,%f,%f,%s" % (Id, i+1, reviewer.cur, reviewer.incur, currentPar, incurrentPar, status)
-			print "%4d,%d,%2d,%3d,%3d,%f,%f,%s" % (Id, r, index, reviewer.cur, reviewer.incur, currentPar, incurrentPar, status)
+			print "%4d,%d,%2d,%3d,%3d,%f,%f,%f,%d,%s" % (Id, r, index, reviewer.cur, reviewer.incur, currentPar, incurrentPar, score, s, status)
 			index = index + 1
 	#assert index == 3
