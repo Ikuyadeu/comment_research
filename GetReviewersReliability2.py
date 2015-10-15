@@ -19,7 +19,7 @@ reviewer_class = defaultdict(lambda: 0)
 reviewer = []
 
 ### Connect DB
-cnct = MySQLdb.connect(db="qt",user="root", passwd="password")
+cnct = MySQLdb.connect(db="qt",user="root", passwd="hirao")
 csr = cnct.cursor()
 
 ### Set default ReviewNum
@@ -64,8 +64,20 @@ for Id in range(1, ReviewNum):
 	for information in info:
 		status = information[1]
 
-	CommentNum = len(comments)
-	### Analysis
+	### Limitation for CommentNum (@author:toshiki.hirao)
+	vCt = 0 # Number of voting "+1" or ""-1"
+	for comment in comments:
+		message = comment[2]
+		s = ReviewerFunctions.JudgeVoteScore(message)
+		if(s == 1 or s == -1):
+			vCt = vCt + 1
+	if vCt != ReserchCommentNum:
+		continue  # Skip the following
+	CommentNum = vCt
+	assert CommentNum == ReserchCommentNum
+
+	### Analysis (If CommentNum equals only ReserchCommentNum, the following code works)
+	index = 1
 	for i, comment in enumerate(comments):
 		message = comment[2]
 		# Judge whether or not this patch was desided by decision comment<"merged, abandoned"> which mean [status] of reviewdata.
@@ -96,7 +108,11 @@ for Id in range(1, ReviewNum):
 				if CommentNum == ReserchCommentNum:
 					currentPar = reviewer.cur/float(reviewer.cur+reviewer.incur)
 					incurrentPar = reviewer.incur/float(reviewer.cur+reviewer.incur)
-					print "%4d,%2d,%3d,%3d,%f,%f,%s" % (Id, i+1, reviewer.cur, reviewer.incur, currentPar, incurrentPar, status)
+					#print "%4d,%2d,%3d,%3d,%f,%f,%s" % (Id, i+1, reviewer.cur, reviewer.incur, currentPar, incurrentPar, status)
+					print "%4d,%d,%2d,%3d,%3d,%f,%f,%s" % (Id, r, index, reviewer.cur, reviewer.incur, currentPar, incurrentPar, status)
+					index = index + 1
+			reviewers_List = []
+			reviewers_score = []
 
 	for (r, s) in zip(reviewers_List, reviewers_score):
 		if status == "merged":
@@ -116,4 +132,7 @@ for Id in range(1, ReviewNum):
 		if CommentNum == ReserchCommentNum:
 			currentPar = reviewer.cur/float(reviewer.cur+reviewer.incur)
 			incurrentPar = reviewer.incur/float(reviewer.cur+reviewer.incur)
-			print "%4d,%2d,%3d,%3d,%f,%f,%s" % (Id, i+1, reviewer.cur, reviewer.incur, currentPar, incurrentPar, status)
+			#print "%4d,%2d,%3d,%3d,%f,%f,%s" % (Id, i+1, reviewer.cur, reviewer.incur, currentPar, incurrentPar, status)
+			print "%4d,%d,%2d,%3d,%3d,%f,%f,%s" % (Id, r, index, reviewer.cur, reviewer.incur, currentPar, incurrentPar, status)
+			index = index + 1
+	#assert index == 3
