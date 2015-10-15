@@ -33,12 +33,12 @@ argc = len(argv)
 if argc == 2:
 	ReserchCommentNum = int(argv[1])
 else:
-	ReserchCommentNum = 3
+	ReserchCommentNum = 5000
 
 # Number of Comments to the patch one
 
 ### Main
-print "ReviewId,Reviewerid,CommentIndex,NumOfCurrent,NumOfincurrent,CurrentPar,IncurrentPar,Status" # print clumn name
+print "ReviewId,Reviewerid,CommentNum,CommentIndex,NumOfCurrent,NumOfincurrent,CurrentPar,IncurrentPar,TotalScore,Status" # print clumn name
 
 for Id in range(1, ReviewNum):
 	sql = "SELECT ReviewId, Status "\
@@ -58,6 +58,8 @@ for Id in range(1, ReviewNum):
 	reviewers_written = []	# Reviewer which has already written a comment in the patch
 	reviewers_List = [] 	# Reviewer which wrote comments in the patch Set (patch not equal patch Set)
 	reviewers_score = []
+
+	total_score = 0
 
 	### Extract status
 	assert len(info) == 0 or len(info) == 1
@@ -93,10 +95,10 @@ for Id in range(1, ReviewNum):
 				else:
 					reviewer.addIncur()
 
-				if CommentNum == ReserchCommentNum:
-					currentPar = reviewer.cur/float(reviewer.cur+reviewer.incur)
-					incurrentPar = reviewer.incur/float(reviewer.cur+reviewer.incur)
-					print "%4d,%2d,%3d,%3d,%f,%f,%s" % (Id, i+1, reviewer.cur, reviewer.incur, currentPar, incurrentPar, status)
+				currentPar = reviewer.cur/float(reviewer.cur+reviewer.incur)
+				incurrentPar = reviewer.incur/float(reviewer.cur+reviewer.incur)
+				if Id > ReserchCommentNum:
+					print "%4d,%d,%2d,%2d,%4d,%4d,%f,%f,%d,%s" % (Id, r, CommentNum, i+1, reviewer.cur, reviewer.incur, currentPar, incurrentPar, total_score, status)
 
 	for (r, s) in zip(reviewers_List, reviewers_score):
 		if status == "merged":
@@ -113,7 +115,7 @@ for Id in range(1, ReviewNum):
 		else:
 			reviewer.addIncur()
 
-		if CommentNum == ReserchCommentNum:
-			currentPar = reviewer.cur/float(reviewer.cur+reviewer.incur)
-			incurrentPar = reviewer.incur/float(reviewer.cur+reviewer.incur)
-			print "%4d,%2d,%3d,%3d,%f,%f,%s" % (Id, i+1, reviewer.cur, reviewer.incur, currentPar, incurrentPar, status)
+		currentPar = reviewer.cur/float(reviewer.cur+reviewer.incur)
+		incurrentPar = reviewer.incur/float(reviewer.cur+reviewer.incur)
+		if Id > ReserchCommentNum:
+			print "%4d,%d,%2d,%2d,%4d,%4d,%f,%f,%d,%s" % (Id, r, CommentNum, i+1, reviewer.cur, reviewer.incur, currentPar, incurrentPar, total_score, status)
