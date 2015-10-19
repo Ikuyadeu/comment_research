@@ -19,7 +19,7 @@ reviewer_class = defaultdict(lambda: 0)
 reviewer = []
 
 ### Connect DB
-cnct = MySQLdb.connect(db="qt",user="root", passwd="password")
+cnct = MySQLdb.connect(db="qt",user="root", passwd="hirao")
 csr = cnct.cursor()
 
 ### Set default ReviewNum
@@ -38,9 +38,11 @@ else:
 # Number of Comments to the patch one
 
 ### Main
-print "ReviewId,Reviewerid,CommentNum,CommentIndex,NumOfCurrent,NumOfincurrent,CurrentPar,IncurrentPar,TotalScore,Status" # print clumn name
+# @ScoreOfReliability: the sum of all reviewers' reliability in each patch
+# @VotingScore: the score that a reviewer voted. (+1 or -1)
+print "ReviewId,Reviewerid,CommentIndex,NumOfCurrent,NumOfincurrent,CurrentPar,IncurrentPar,ScoreOfReliability,VotingScore,Status" # print clumn name
 
-for Id in range(1, ReviewNum):
+for Id in range(10000, ReviewNum):
 	sql = "SELECT ReviewId, Status "\
 	"FROM Review "\
 	"WHERE ReviewId = '"+str(Id)+"' "\
@@ -66,8 +68,21 @@ for Id in range(1, ReviewNum):
 	for information in info:
 		status = information[1]
 
-	CommentNum = len(comments)
-	### Analysis
+	### Limitation for CommentNum (@author:toshiki.hirao)
+	vCt = 0 # Number of voting "+1" or ""-1"
+	for comment in comments:
+		message = comment[2]
+		s = ReviewerFunctions.JudgeVoteScore(message)
+		if(s == 1 or s == -1):
+			vCt = vCt + 1
+	if vCt != ReserchCommentNum:
+		continue  # Skip the following
+	CommentNum = vCt
+	assert CommentNum == ReserchCommentNum
+
+	### Analysis (If CommentNum equals only ReserchCommentNum, the following code works)
+	index = 1  # @index:CommentIndex
+	score = 0  # @score:ScoreOfReliabilitys
 	for i, comment in enumerate(comments):
 		message = comment[2]
 		# Judge whether or not this patch was desided by decision comment<"merged, abandoned"> which mean [status] of reviewdata.
@@ -95,10 +110,22 @@ for Id in range(1, ReviewNum):
 				else:
 					reviewer.addIncur()
 
+<<<<<<< HEAD
+				if CommentNum == ReserchCommentNum:
+					currentPar = reviewer.cur/float(reviewer.cur+reviewer.incur)
+					incurrentPar = reviewer.incur/float(reviewer.cur+reviewer.incur)
+					score = score + currentPar
+					#print "%4d,%2d,%3d,%3d,%f,%f,%s" % (Id, i+1, reviewer.cur, reviewer.incur, currentPar, incurrentPar, status)
+					print "%4d,%d,%2d,%3d,%3d,%f,%f,%f,%d,%s" % (Id, r, index, reviewer.cur, reviewer.incur, currentPar, incurrentPar, score, s, status)
+					index = index + 1
+			reviewers_List = []
+			reviewers_score = []
+=======
 				currentPar = reviewer.cur/float(reviewer.cur+reviewer.incur)
 				incurrentPar = reviewer.incur/float(reviewer.cur+reviewer.incur)
 				if Id > ReserchCommentNum:
 					print "%4d,%d,%2d,%2d,%4d,%4d,%f,%f,%d,%s" % (Id, r, CommentNum, i+1, reviewer.cur, reviewer.incur, currentPar, incurrentPar, total_score, status)
+>>>>>>> 29e0e9f0c9ef3e62cd623e15e648f0bf6731e85c
 
 	for (r, s) in zip(reviewers_List, reviewers_score):
 		if status == "merged":
@@ -115,7 +142,18 @@ for Id in range(1, ReviewNum):
 		else:
 			reviewer.addIncur()
 
+<<<<<<< HEAD
+		if CommentNum == ReserchCommentNum:
+			currentPar = reviewer.cur/float(reviewer.cur+reviewer.incur)
+			incurrentPar = reviewer.incur/float(reviewer.cur+reviewer.incur)
+			score = score + currentPar
+			#print "%4d,%2d,%3d,%3d,%f,%f,%s" % (Id, i+1, reviewer.cur, reviewer.incur, currentPar, incurrentPar, status)
+			print "%4d,%d,%2d,%3d,%3d,%f,%f,%f,%d,%s" % (Id, r, index, reviewer.cur, reviewer.incur, currentPar, incurrentPar, score, s, status)
+			index = index + 1
+	#assert index == 3
+=======
 		currentPar = reviewer.cur/float(reviewer.cur+reviewer.incur)
 		incurrentPar = reviewer.incur/float(reviewer.cur+reviewer.incur)
 		if Id > ReserchCommentNum:
 			print "%4d,%d,%2d,%2d,%4d,%4d,%f,%f,%d,%s" % (Id, r, CommentNum, i+1, reviewer.cur, reviewer.incur, currentPar, incurrentPar, total_score, status)
+>>>>>>> 29e0e9f0c9ef3e62cd623e15e648f0bf6731e85c
