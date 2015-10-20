@@ -11,11 +11,11 @@ num1 <- data.frame() #初期化
 num2 <- data.frame()
 num3 <- data.frame()
 
-num1 <- read.csv("/Users/toshiki-h/Dropbox/toshiki-works/result-1015/numOfPatchsets_1_Start10000-End70814_RQ2.csv"
+num1 <- read.csv("R_sample/numOfPatchsets_1_Start10000-End70814_RQ2.csv"
                  ,sep=",", header=TRUE)
-num2 <- read.csv("/Users/toshiki-h/Dropbox/toshiki-works/result-1015/numOfPatchsets_2_Start10000-End70814_RQ2.csv"
+num2 <- read.csv("R_sample/numOfPatchsets_2_Start10000-End70814_RQ2.csv"
                  ,sep=",", header=TRUE)
-num3 <- read.csv("/Users/toshiki-h/Dropbox/toshiki-works/result-1015/numOfPatchsets_3_Start10000-End70814_RQ2.csv"
+num3 <- read.csv("R_sample/numOfPatchsets_3_Start10000-End70814_RQ2.csv"
                  ,sep=",", header=TRUE)
 
 ### Separate infomation by CommentIndex
@@ -31,7 +31,7 @@ index3_3 <- data.frame()
 for(i in 1:nrow(num3)){
   # もし，num3のi行目のCommentIndexが１, num3のi行目のStatusがMergedの場合を指す
   # ちなみに，num3$--- のドルマークの意味は，そのtableのある列を指定したい時に使用する
-  if(num3$CommentIndex[i] == 1 && num3$Status[i] == "merged"){ 
+  if(num3$CommentIndex[i] == 1 && num3$Status[i] == "merged"){
     # index3_1にnum3のi行目を挿入する
     #   rbind()は指定した行を抽出する関数
     #   num3[i, ]はi行目のセル全体を指す

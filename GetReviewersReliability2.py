@@ -19,7 +19,7 @@ reviewer_class = defaultdict(lambda: 0)
 reviewer = []
 
 ### Connect DB
-cnct = MySQLdb.connect(db="qt",user="root", passwd="hirao")
+cnct = MySQLdb.connect(db="qt",user="root", passwd="password")
 csr = cnct.cursor()
 
 ### Set default ReviewNum
@@ -33,7 +33,7 @@ argc = len(argv)
 if argc == 2:
 	ReserchCommentNum = int(argv[1])
 else:
-	ReserchCommentNum = 5000
+	ReserchCommentNum = 3
 
 # Number of Comments to the patch one
 
@@ -60,8 +60,6 @@ for Id in range(10000, ReviewNum):
 	reviewers_written = []	# Reviewer which has already written a comment in the patch
 	reviewers_List = [] 	# Reviewer which wrote comments in the patch Set (patch not equal patch Set)
 	reviewers_score = []
-
-	total_score = 0
 
 	### Extract status
 	assert len(info) == 0 or len(info) == 1
@@ -110,7 +108,6 @@ for Id in range(10000, ReviewNum):
 				else:
 					reviewer.addIncur()
 
-<<<<<<< HEAD
 				if CommentNum == ReserchCommentNum:
 					currentPar = reviewer.cur/float(reviewer.cur+reviewer.incur)
 					incurrentPar = reviewer.incur/float(reviewer.cur+reviewer.incur)
@@ -120,12 +117,6 @@ for Id in range(10000, ReviewNum):
 					index = index + 1
 			reviewers_List = []
 			reviewers_score = []
-=======
-				currentPar = reviewer.cur/float(reviewer.cur+reviewer.incur)
-				incurrentPar = reviewer.incur/float(reviewer.cur+reviewer.incur)
-				if Id > ReserchCommentNum:
-					print "%4d,%d,%2d,%2d,%4d,%4d,%f,%f,%d,%s" % (Id, r, CommentNum, i+1, reviewer.cur, reviewer.incur, currentPar, incurrentPar, total_score, status)
->>>>>>> 29e0e9f0c9ef3e62cd623e15e648f0bf6731e85c
 
 	for (r, s) in zip(reviewers_List, reviewers_score):
 		if status == "merged":
@@ -142,7 +133,6 @@ for Id in range(10000, ReviewNum):
 		else:
 			reviewer.addIncur()
 
-<<<<<<< HEAD
 		if CommentNum == ReserchCommentNum:
 			currentPar = reviewer.cur/float(reviewer.cur+reviewer.incur)
 			incurrentPar = reviewer.incur/float(reviewer.cur+reviewer.incur)
@@ -151,9 +141,3 @@ for Id in range(10000, ReviewNum):
 			print "%4d,%d,%2d,%3d,%3d,%f,%f,%f,%d,%s" % (Id, r, index, reviewer.cur, reviewer.incur, currentPar, incurrentPar, score, s, status)
 			index = index + 1
 	#assert index == 3
-=======
-		currentPar = reviewer.cur/float(reviewer.cur+reviewer.incur)
-		incurrentPar = reviewer.incur/float(reviewer.cur+reviewer.incur)
-		if Id > ReserchCommentNum:
-			print "%4d,%d,%2d,%2d,%4d,%4d,%f,%f,%d,%s" % (Id, r, CommentNum, i+1, reviewer.cur, reviewer.incur, currentPar, incurrentPar, total_score, status)
->>>>>>> 29e0e9f0c9ef3e62cd623e15e648f0bf6731e85c
