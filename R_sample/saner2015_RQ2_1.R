@@ -26,11 +26,11 @@ for(i in 1:nrow(num)){
     if(num$VotingScore[i] == 1){      # vote is like
       index_l_m <- rbind(index_l_m, num[i,])
     }else{                            # vote is dislike
-      index_d_m <- rbind(index_l_a, num[i,])
+      index_d_m <- rbind(index_d_m, num[i,])
     }
   }else{                              # status is abandoned
     if(num$VotingScore[i] == 1){      # vote is like
-      index_l_a <- rbind(index_d_m, num[i,])
+      index_l_a <- rbind(index_l_a, num[i,])
     }else{
       index_d_a <- rbind(index_d_a, num[i,])
     }
