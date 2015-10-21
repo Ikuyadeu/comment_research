@@ -1,6 +1,6 @@
 ##################
 # Author:Ueda Yuki
-# CreatedOn: 2015/10/10
+# CreatedOn: 2015/10/14
 # Summary: This program is to count current judge and incurrent judge.
 ##################
 
@@ -31,10 +31,19 @@ ReviewNum = csr.fetchall()[0][0] # 70705 <= Number Of Qt project's patchsets
 argv = sys.argv
 argc = len(argv)
 if argc == 2:
-	if ReviewNum > int(argv[1]):
-		ReviewNum = int(argv[1])
+	ReserchCommentNum = int(argv[1])
+else:
+	ReserchCommentNum = 3
+
+# out put Reviewid min
+outId = 10000;
+# Number of Comments to the patch one
 
 ### Main
+# @ScoreOfReliability: the sum of all reviewers' reliability in each patch
+# @VotingScore: the score that a reviewer voted. (+1 or -1)
+print "ReviewId,Reviewerid,CommentIndex,NumOfCurrent,NumOfincurrent,CurrentPar,IncurrentPar,ScoreOfReliability,VotingScore,Status" # print clumn name
+
 for Id in range(1, ReviewNum):
 	sql = "SELECT ReviewId, Status "\
 	"FROM Review "\
@@ -59,8 +68,22 @@ for Id in range(1, ReviewNum):
 	for information in info:
 		status = information[1]
 
-	### Analysis
+	### Limitation for CommentNum (@author:toshiki.hirao)
+	vCt = 0 # Number of voting "+1" or ""-1"
 	for comment in comments:
+		message = comment[2]
+		s = ReviewerFunctions.JudgeVoteScore(message)
+		if(s == 1 or s == -1):
+			vCt = vCt + 1
+	if vCt != ReserchCommentNum:
+		continue  # Skip the following
+	CommentNum = vCt
+	assert CommentNum == ReserchCommentNum
+
+	### Analysis (If CommentNum equals only ReserchCommentNum, the following code works)
+	index = 1  # @index:CommentIndex
+	score = 0  # @score:ScoreOfReliabilitys
+	for i, comment in enumerate(comments):
 		message = comment[2]
 		# Judge whether or not this patch was desided by decision comment<"merged, abandoned"> which mean [status] of reviewdata.
 		# And, We regard that "updated ---" comment is also decision comment.
@@ -81,10 +104,21 @@ for Id in range(1, ReviewNum):
 				if not ReviewerFunctions.IsReviewerClass(r, reviewer_class):
 					ReviewerFunctions.MakeReviewerClass(r, reviewer_class)
 
+				reviewer = reviewer_class[r]
 				if ReviewerFunctions.IsCorrectVoting(r, s, judge):
-					reviewer_class[r].addCur()
+					reviewer.addCur()
 				else:
-					reviewer_class[r].addIncur()
+					reviewer.addIncur()
+
+				if CommentNum == ReserchCommentNum:
+					currentPar = reviewer.cur/float(reviewer.cur+reviewer.incur)
+					incurrentPar = reviewer.incur/float(reviewer.cur+reviewer.incur)
+					score = score + currentPar
+					if Id > outId:
+						print "%4d,%d,%2d,%3d,%3d,%f,%f,%f,%d,%s" % (Id, r, index, reviewer.cur, reviewer.incur, currentPar, incurrentPar, score, s, status)
+					index = index + 1
+			reviewers_List = []
+			reviewers_score = []
 
 	for (r, s) in zip(reviewers_List, reviewers_score):
 		if status == "merged":
@@ -95,16 +129,17 @@ for Id in range(1, ReviewNum):
 		if not ReviewerFunctions.IsReviewerClass(r, reviewer_class):
 			ReviewerFunctions.MakeReviewerClass(r, reviewer_class)
 
+		reviewer = reviewer_class[r]
 		if ReviewerFunctions.IsCorrectVoting(r, s, judge):
-			reviewer_class[r].addCur()
+			reviewer.addCur()
 		else:
-			reviewer_class[r].addIncur()
+			reviewer.addIncur()
 
-### Culcurate Former and Latter
-
-### Output
-print "Reviewerid,NumOfCurrent,NumOfincurrent,CurrentPar,IncurrentPar" # print clumn name
-for i in reviewer_class:
-	currentPar = reviewer_class[i].cur/float(reviewer_class[i].cur+reviewer_class[i].incur)
-	incurrentPar = reviewer_class[i].incur/float(reviewer_class[i].cur+reviewer_class[i].incur)
-	print "%d,%d,%d,%f,%f" % (i, reviewer_class[i].cur, reviewer_class[i].incur,currentPar,incurrentPar)
+		if CommentNum == ReserchCommentNum:
+			currentPar = reviewer.cur/float(reviewer.cur+reviewer.incur)
+			incurrentPar = reviewer.incur/float(reviewer.cur+reviewer.incur)
+			score = score + currentPar
+			if Id > outId:
+				print "%4d,%d,%2d,%3d,%3d,%f,%f,%f,%d,%s" % (Id, r, index, reviewer.cur, reviewer.incur, currentPar, incurrentPar, score, s, status)
+			index = index + 1
+	#assert index == 3
