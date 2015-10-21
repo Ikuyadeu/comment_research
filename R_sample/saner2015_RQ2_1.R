@@ -3,7 +3,7 @@
 ## @author:Yuki Ueda
 ## @createdOn:2015/10/15
 ########################
-pdf("RQ2_1.pdf")
+#pdf("RQ2_1.pdf")
 
 
 ### Set data
@@ -44,7 +44,9 @@ index <- list(index_abondone, index_merge)
 for(i in index){
   for(j in i){
     value = j$CurrentPar
-    boxplot(value, xlab="Reviewer order", ylab="Reliability", main=paste("Vote:", j$VotingScore[0], "Status:", j$Status[0]))
+    name = paste("Vote:", j$VotingScore[1], "Status:", j$Status[1])
+    jpeg(paste("picture/",name,".jpg"))
+    boxplot(value, xlab="Reviewer order", ylab="Reliability", main=name)
     summary(value)
   }
 }

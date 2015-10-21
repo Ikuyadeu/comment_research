@@ -3,7 +3,7 @@
 ## @author:Yuki Ueda
 ## @createdOn:2015/10/20
 ########################
-pdf("RQ2_2.pdf")
+#pdf("RQ2_2.pdf")
 
 
 ### Set data
@@ -49,8 +49,9 @@ for(i in index){
     value1 = j[[1]]$CurrentPar
     for(k in i){ # second Comment
       value2 = k[[2]]$CurrentPar
-      vote = paste("Vote:", j[[1]]$VotingScore[1], ",", k[[2]]$VotingScore[1], " ")
-      boxplot(value1, value2, xlab="Reviewer order", ylab="Reliability", main=paste(vote, "Status:", j[[1]]$Status[1]))
+      name = paste("Vote:", j[[1]]$VotingScore[1], ",", k[[2]]$VotingScore[1], "Status:", j[[1]]$Status[1])
+      jpeg(paste("picture/",name,".jpg"))
+      boxplot(value1, value2, xlab="Reviewer order", ylab="Reliability", main=paste(name))
       summary(value1)
       summary(value2)
     }
