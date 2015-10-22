@@ -10,7 +10,7 @@
 num <- data.frame() # Init
 
 # Input csv
-num <- read.csv("CSVdata/numOfPatchsets_2.csv"
+num <- read.csv("CSVdata_o/numOfPatchsets_2.csv"
                  ,sep=",", header=TRUE)
 
 ### number of patchset's voting(+1, -1) is 1
@@ -53,8 +53,8 @@ for(i in index){
     for(k in j){ # second Comment
       value1 = k[[1]]$CurrentPar
       value2 = k[[2]]$CurrentPar
-      name = paste("Vote:", k[[1]]$VotingScore[1], ",", k[[2]]$VotingScore[1], "Status:", k[[1]]$Status[1],sep = "")
-      jpeg(paste("picture2/",name,".jpg",sep=""))
+      name = paste("Vote:", k[[1]]$VotingScore[1], ",", k[[2]]$VotingScore[1], "Status:", k[[1]]$Status[1],"Num:",length(value1),sep = "")
+      jpeg(paste("picture_o/",name,".jpg",sep=""))
       boxplot(value1, value2, xlab="Reviewer order", ylab="Reliability", main=paste(name))
       summary(value1)
       summary(value2)

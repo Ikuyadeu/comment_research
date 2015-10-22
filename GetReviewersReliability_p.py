@@ -18,8 +18,10 @@ from Class import ReviewerClass
 reviewer_class = defaultdict(lambda: 0)
 reviewer = []
 
+botNum = 0
+
 ### Connect DB
-cnct = MySQLdb.connect(db="Openstack",user="root", passwd="password")
+cnct = MySQLdb.connect(db="qt",user="root", passwd="password")
 csr = cnct.cursor()
 
 ### Set default ReviewNum

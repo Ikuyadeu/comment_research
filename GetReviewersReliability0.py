@@ -19,7 +19,7 @@ reviewer_class = defaultdict(lambda: 0)
 reviewer = []
 
 ### Connect DB
-cnct = MySQLdb.connect(db="Openstack",user="root", passwd="password")
+cnct = MySQLdb.connect(db="qt",user="root", passwd="password")
 csr = cnct.cursor()
 
 ### Set default ReviewNum
@@ -39,10 +39,13 @@ else:
 outId = 10000;
 # Number of Comments to the patch one
 
+mergedNum = 0
+abandonedNum = 0
+
 ### Main
 # @ScoreOfReliability: the sum of all reviewers' reliability in each patch
 # @VotingScore: the score that a reviewer voted. (+1 or -1)
-print "ReviewId,Reviewerid,CommentIndex,NumOfCurrent,NumOfincurrent,CurrentPar,IncurrentPar,ScoreOfReliability,VotingScore,Status" # print clumn name
+#print "ReviewId,Reviewerid,CommentIndex,NumOfCurrent,NumOfincurrent,CurrentPar,IncurrentPar,ScoreOfReliability,VotingScore,Status" # print clumn name
 
 for Id in range(1, ReviewNum):
 	sql = "SELECT ReviewId, Status "\
@@ -110,20 +113,15 @@ for Id in range(1, ReviewNum):
 				else:
 					reviewer.addIncur()
 
-				if CommentNum == ReserchCommentNum:
-					currentPar = reviewer.cur/float(reviewer.cur+reviewer.incur)
-					incurrentPar = reviewer.incur/float(reviewer.cur+reviewer.incur)
-					score = score + currentPar
-					if Id > outId:
-						print "%4d,%d,%2d,%3d,%3d,%f,%f,%f,%d,%s" % (Id, r, index, reviewer.cur, reviewer.incur, currentPar, incurrentPar, score, s, status)
-					index = index + 1
 			reviewers_List = []
 			reviewers_score = []
 
 	for (r, s) in zip(reviewers_List, reviewers_score):
 		if status == "merged":
+			mergedNum += 1
 			judge = 2
 		else:     # status is abandoned
+			abandonedNum += 1
 			judge = -2
 
 		if not ReviewerFunctions.IsReviewerClass(r, reviewer_class):
@@ -135,11 +133,6 @@ for Id in range(1, ReviewNum):
 		else:
 			reviewer.addIncur()
 
-		if CommentNum == ReserchCommentNum:
-			currentPar = reviewer.cur/float(reviewer.cur+reviewer.incur)
-			incurrentPar = reviewer.incur/float(reviewer.cur+reviewer.incur)
-			score = score + currentPar
-			if Id > outId:
-				print "%4d,%d,%2d,%3d,%3d,%f,%f,%f,%d,%s" % (Id, r, index, reviewer.cur, reviewer.incur, currentPar, incurrentPar, score, s, status)
-			index = index + 1
 	#assert index == 3
+print mergedNum
+print abandonedNum
