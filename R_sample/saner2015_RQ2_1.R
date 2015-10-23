@@ -10,7 +10,7 @@
 num <- data.frame() # Init
 
 # Input csv
-num <- read.csv("CSVdata_o/numOfPatchsets_1.csv"
+num <- read.csv("CSVdata/numOfPatchsets_1.csv"
                  ,sep=",", header=TRUE)
 
 ### number of patchset's voting(+1, -1) is 1
