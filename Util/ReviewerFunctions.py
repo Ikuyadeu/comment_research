@@ -27,17 +27,21 @@ def JudgeVoteScore(m): # (Regular expression)
 	p2 = re.compile(r'Patch Set [1-9]*: Works for me')
 	p3 = re.compile(r'Patch Set [1-9]*: Verified')
 	p4 = re.compile(r'Patch Set [1-9]*: Sanity review passed') #
-	p5 = re.compile(r'Patch Set [1-9]*: Code-Review\+1')
-	p6 = re.compile(r'Patch Set [1-9]*: Workflow\+1')
-	if p1.match(m) or p2.match(m) or p3.match(m) or p4.match(m) or p5.match(m) or p6.match(m):
+	#p5 = re.compile(r"Patch Set [1-9]*: Code-Review\+1")
+	#p6 = re.compile(r"Patch Set [1-9]*: Workflow\+1")
+	#if p1.match(m) or p2.match(m) or p3.match(m) or p4.match(m) or p5.match(m) or p6.match(m):
+	if p1.match(m) or p2.match(m) or p3.match(m) or p4.match(m):
 		return 1
 
     # Score -1
 	#p1 = re.compile(r"Patch Set [1-9]*: I would prefer that you didn'*t submit this") #
-	p1 = re.compile(r"Patch Set [1-9]*: I would prefer that you didn'*t merge this")
+	p1 = re.compile(r"Patch Set [1-9]*: I would prefer that you didn'*t submit this") #
 	p2 = re.compile(r'Patch Set [1-9]*: Sanity problems found') #
 	p3 = re.compile(r'Patch Set [1-9]*: Code-Review-1')
 	p4 = re.compile(r'Patch Set [1-9]*: Workflow-1')
+	#p5 = re.compile(r"Patch Set [1-9]*: I would prefer that you didn'*t merge this")
+	#p6 = re.compile(r"Patch Set [1-9]*: Doesn'*t seem to work")
+	#if p1.match(m) or p2.match(m) or p3.match(m) or p4.match(m) or p5.match(m) or p6.match(m):
 	if p1.match(m) or p2.match(m) or p3.match(m) or p4.match(m):
 		return -1
 
@@ -48,7 +52,7 @@ def JudgeVoteScore(m): # (Regular expression)
 		return 0
 	"""
 	# No Score
-	return 0
+	return -1
 
 # Judge whether the comment is Dicision or not
 # @m:message
@@ -62,10 +66,12 @@ def JudgeDicisionMaking(m):
 
 	# Score -2
 	#p1 = re.compile(r"Patch Set [1-9]*: I would prefer that you didn'*t merge this") #
+	p1 = re.compile(r'Patch Set [1-9]*: Do not submit') #
 	p2 = re.compile(r'Patch Set [1-9]*: Do not merge') #
 	p3 = re.compile(r'Patch Set [1-9]*: Major sanity problems found') #
 	p4 = re.compile(r'Uploaded patch set [1-9]*') #
-	if p2.match(m) or p3.match(m) or p4.match(m):
+	p5 = re.compile(r'Patch Set [1-9]*: Fails') #
+	if p1.match or p2.match(m) or p3.match(m) or p4.match(m) or p5.match(m):
 		return -2
 
 	# Not JudgeDicisionMaking
