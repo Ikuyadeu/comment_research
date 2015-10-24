@@ -46,7 +46,7 @@ for(i in index){
     value = j$CurrentPar
     name = paste("Vote:", j$VotingScore[1], "Status:", j$Status[1],"Num:",length(value),sep="")
     jpeg(paste("picture_o/RQ2_1",name,".jpg",sep=""))
-    boxplot(value, xlab="Reviewer order", ylab="Reliability", main=name)
+    boxplot(value, xlab="Reviewer order", ylab="Reliability", main=name, ylim=c(0,1))
     summary(value)
   }
 }
