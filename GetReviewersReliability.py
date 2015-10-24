@@ -45,7 +45,7 @@ outId = 10000;
 print "ReviewId,Reviewerid,CommentIndex,NumOfCurrent,NumOfincurrent,CurrentPar,IncurrentPar,ScoreOfReliability,VotingScore,Status" # print clumn name
 
 #for Id in range(1, ReviewNum):
-for Id in range(1, 30000):
+for Id in range(1, ReviewNum):
 	sql = "SELECT ReviewId, Status "\
 	"FROM Review "\
 	"WHERE ReviewId = '"+str(Id)+"' "\
