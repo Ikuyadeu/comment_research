@@ -54,7 +54,7 @@ for(i in index){
       value1 = k[[1]]$CurrentPar
       value2 = k[[2]]$CurrentPar
       name = paste("Vote:", k[[1]]$VotingScore[1], ",", k[[2]]$VotingScore[1], "Status:", k[[1]]$Status[1],"Num:",length(value1),sep = "")
-      jpeg(paste("picture_o/",name,".jpg",sep=""))
+      jpeg(paste("picture_o/RQ2_2",name,".jpg",sep=""))
       boxplot(value1, value2, xlab="Reviewer order", ylab="Reliability", main=paste(name))
       summary(value1)
       summary(value2)

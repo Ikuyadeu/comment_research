@@ -39,7 +39,8 @@ def JudgeVoteScore(m): # (Regular expression)
 	p4 = re.compile(r'Patch Set [1-9]*: Workflow-1')
 	p5 = re.compile(r"Patch Set [1-9]*: Doesn'*t seem to work")
 	p6 = re.compile(r"Patch Set [1-9]*: I would prefer that you didn'*t merge this")
-	if p1.match(m) or p2.match(m) or p3.match(m) or p4.match(m) or p5.match(m) or p6.match(m):
+	p7 = re.compile(r'Patch Set [1-9]*: No score')
+	if p1.match(m) or p2.match(m) or p3.match(m) or p4.match(m) or p5.match(m) or p6.match(m) or p7.match(m):
 		return -1
 
     # Score 0
