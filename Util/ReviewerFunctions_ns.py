@@ -29,7 +29,7 @@ def JudgeVoteScore(m): # (Regular expression)
 	p4 = re.compile(r'Patch Set [1-9]*: Sanity review passed') #
 	p5 = re.compile(r'Patch Set [1-9]*: Code-Review\+1')
 	p4 = re.compile(r'Patch Set [1-9]*: Workflow\+1')
-	if p1.match(m) or p2.match(m) or p3.match(m) or p4.match(m):
+	if p1.match(m) or p2.match(m) or p3.match(m) or p4.match(m) or p5.match(m) or p6.match(m):
 		return 1
 
     # Score -1
@@ -37,7 +37,7 @@ def JudgeVoteScore(m): # (Regular expression)
 	p2 = re.compile(r'Patch Set [1-9]*: Sanity problems found') #
 	p3 = re.compile(r'Patch Set [1-9]*: Code-Review-1')
 	p4 = re.compile(r'Patch Set [1-9]*: Workflow-1')
-	if p1.match(m) or p2.match(m):
+	if p1.match(m) or p2.match(m) or p3.match(m) or p4.match(m):
 		return -1
 
     # Score 0

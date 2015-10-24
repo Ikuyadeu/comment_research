@@ -44,7 +44,8 @@ outId = 10000;
 # @VotingScore: the score that a reviewer voted. (+1 or -1)
 print "ReviewId,Reviewerid,CommentIndex,NumOfCurrent,NumOfincurrent,CurrentPar,IncurrentPar,ScoreOfReliability,VotingScore,Status" # print clumn name
 
-for Id in range(1, ReviewNum):
+#for Id in range(1, ReviewNum):
+for Id in range(1, 30000):
 	sql = "SELECT ReviewId, Status "\
 	"FROM Review "\
 	"WHERE ReviewId = '"+str(Id)+"' "\
