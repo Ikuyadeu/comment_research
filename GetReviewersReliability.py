@@ -8,7 +8,6 @@
 
 ### Import lib
 import sys
-import csv
 import MySQLdb
 from collections import defaultdict
 from Util import ReviewerFunctions
@@ -19,7 +18,8 @@ reviewer_class = defaultdict(lambda: 0)
 reviewer = []
 
 ### Connect DB
-cnct = MySQLdb.connect(db="qt",user="root", passwd="password")
+# db = qt or Openstack
+cnct = MySQLdb.connect(db="Openstack",user="root", passwd="password")
 csr = cnct.cursor()
 
 ### Set default ReviewNum

@@ -8,7 +8,6 @@
 
 ### Import lib
 import sys
-import csv
 import MySQLdb
 from collections import defaultdict
 from Util import ReviewerFunctions

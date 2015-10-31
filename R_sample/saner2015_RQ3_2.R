@@ -1,9 +1,8 @@
 ########################
-## SANER2015 RQ2
+## SANER2015 RQ3
 ## @author:Yuki Ueda
-## @createdOn:2015/10/20
+## @createdOn:2015/10/28
 ########################
-#pdf("RQ2_2.pdf")
 
 
 ### Set data
