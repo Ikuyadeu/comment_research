@@ -3,59 +3,70 @@
 ## @author:Yuki Ueda
 ## @createdOn:2015/10/20
 ########################
+#pdf("RQ2_2.pdf")
 
 
 ### Set data
 num <- data.frame() # Init
 
-# Input numOfPatchsets_2_Start10000-End70705_RQ2.csv for csv
-num <- read.csv("R_sample/numOfPatchsets_3_Start10000-End70705_RQ2.csv"
+# Input csv
+num <- read.csv("CSVdata_q/numOfPatchsets_3.csv"
                  ,sep=",", header=TRUE)
 
 ### number of patchset's voting(+1, -1) is 1
-# index_l_m: vote is "like" and status is "merge"
-# index_d_a: vote is "dislike" and status is abandoned
-index_l_m <- list(data.frame(), data.frame(), data.frame())
-index_d_m <- list(data.frame(), data.frame(), data.frame())
-index_l_a <- list(data.frame(), data.frame(), data.frame())
-index_d_a <- list(data.frame(), data.frame(), data.frame())
+index_1 <- list(data.frame(), data.frame(), data.frame()) # first vote is like or dislike
+index_2 <- list(index_1, index_1) # second vote is like or dislike
+index_3 <- list(index_2, index_2)
+index_m <- list(index_3, index_3) # merge or abandoned
+index <- list(index_m,index_m)
 
 for(i in 1:nrow(num)){
+  Id = num$ReviewId[i]
   CIndex = num$CommentIndex[i]      # CommentIndex
-  if(num$Status[i] == "merged"){  # status is merge
-    if(num$VotingScore[i] == 1){      # vote is like
-      index_l_m[[CIndex]] <- rbind(index_l_m[[CIndex]], num[i,])
-    }else{                          # vote is dislike
-      index_d_m[[CIndex]] <- rbind(index_d_m[[CIndex]], num[i,])
-    }
-  }else{                            # status is abandoned
+  if(CIndex==1){
     if(num$VotingScore[i] == 1){
-      index_l_a[[CIndex]] <- rbind(index_l_a[[CIndex]], num[i,])
+      vote1 = 1
     }else{
-      index_d_a[[CIndex]] <- rbind(index_d_a[[CIndex]], num[i,])
+      vote1 = 2
     }
+    next
+  }else if(CIndex==2){
+    if(num$VotingScore[i] == 1){
+      vote2 = 1
+    }else{
+      vote2 = 2
+    }
+    next
   }
-}
 
-# Summarize the index
-index_merge <- list(index_l_m, index_d_m)
-index_abondone <- list(index_l_a, index_d_a)
-index <- list(index_abondone, index_merge)
+  if(num$Status[i] == "merged"){
+    merge_or_abandone = 1
+  }else{
+    merge_or_abandone = 2
+  }
+
+  if(num$VotingScore[i] == 1){
+    vote3 = 1
+  }else{
+    vote3 = 2
+  }
+
+  index[[merge_or_abandone]][[vote1]][[vote2]][[vote3]][[1]] <- rbind(index[[merge_or_abandone]][[vote1]][[vote2]][[vote3]][[1]], num[i-2,])
+  index[[merge_or_abandone]][[vote1]][[vote2]][[vote3]][[2]] <- rbind(index[[merge_or_abandone]][[vote1]][[vote2]][[vote3]][[2]], num[i-1,])
+  index[[merge_or_abandone]][[vote1]][[vote2]][[vote3]][[3]] <- rbind(index[[merge_or_abandone]][[vote1]][[vote2]][[vote3]][[3]], num[i,])
+}
 
 # Output to PDF file
 for(i in index){
   for(j in i){ # first Comment
-    value1 = j[[1]]$CurrentPar
-    for(k in i){ # second Comment
-      value2 = k[[2]]$CurrentPar
-      for(l in i){ # third Comment
+    for(k in j){ # second Comment
+      for(l in k){
+        value1 = l[[1]]$CurrentPar
+        value2 = l[[2]]$CurrentPar
         value3 = l[[3]]$CurrentPar
-        name = paste("Vote:", j[[1]]$VotingScore[1], ",", k[[2]]$VotingScore[1], ",", l[[3]]$VotingScore[1], "Status:", j[[1]]$Status[1])
-        jpeg(paste(name,".jpg"))
-        boxplot(value1, value2, value3, xlab="Reviewer order", ylab="Reliability", main=paste("picture/",name))
-        summary(value1)
-        summary(value2)
-        summary(value3)
+        name = paste("Vote:", l[[1]]$VotingScore[1], ",", l[[2]]$VotingScore[1], ",", l[[3]]$VotingScore[1], "Status:", l[[1]]$Status[1],"Num:",length(value1),sep = "")
+        jpeg(paste("picture_q/RQ2_3",name,".jpg",sep=""))
+        boxplot(value1, value2,  value3, xlab="Reviewer order", ylab="Reliability", main=name, ylim=c(0,1))
       }
     }
   }

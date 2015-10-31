@@ -11,11 +11,11 @@ num1 <- data.frame() #初期化
 num2 <- data.frame()
 num3 <- data.frame()
 
-num1 <- read.csv("R_sample/numOfPatchsets_1_Start10000-End70814_RQ2.csv"
+num1 <- read.csv("CSVdata_q/numOfPatchsets_1.csv"
                  ,sep=",", header=TRUE)
-num2 <- read.csv("R_sample/numOfPatchsets_2_Start10000-End70814_RQ2.csv"
+num2 <- read.csv("CSVdata_q/numOfPatchsets_2.csv"
                  ,sep=",", header=TRUE)
-num3 <- read.csv("R_sample/numOfPatchsets_3_Start10000-End70814_RQ2.csv"
+num3 <- read.csv("CSVdata_q/numOfPatchsets_2.csv"
                  ,sep=",", header=TRUE)
 
 ### Separate infomation by CommentIndex

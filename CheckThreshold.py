@@ -30,28 +30,36 @@ ReviewNum = csr.fetchall()[0][0] # 70705 <= Number Of Qt project's patchsets
 # set original ReviewNum
 argv = sys.argv
 argc = len(argv)
+threshold = []
+
 if argc >= 6:
 	ReserchCommentNum = int(argv[1])
-    midian = int(argv[2])
-    first = int(argv[3])
-    mini = int(argv[4])
-    votenum = int(argv[5])
-
+	threshold = [float(argv[2]),float(argv[3]),float(argv[4])]
+	vote1 = int(argv[5])
+	if argc >= 7:
+		vote2 = int(argv[6])
+	else:
+		vote2 = 0
 else:
-	ReserchCommentNum = 2
-    midian = 0.7
-    first = 0.6
-    mini = 0.4
-    votenum = 1
+	ReserchCommentNum = 1
+	midian = 0.7
+	first = 0.6
+	mini = 0.4
+	vote1 = 1
+	vote2 = 0
 
 # out put Reviewid min
 outId = 10000;
 # Number of Comments to the patch one
 
+TP = [0,0,0] # True Positive
+FP = [0,0,0]
+TN = [0,0,0]
+FN = [0,0,0] # False Nagative
+
 ### Main
 # @ScoreOfReliability: the sum of all reviewers' reliability in each patch
 # @VotingScore: the score that a reviewer voted. (+1 or -1)
-print "ReviewId,Reviewerid,CommentIndex,NumOfCurrent,NumOfincurrent,CurrentPar,IncurrentPar,ScoreOfReliability,VotingScore,Status" # print clumn name
 
 #for Id in range(1, ReviewNum):
 for Id in range(1, ReviewNum):
@@ -69,7 +77,6 @@ for Id in range(1, ReviewNum):
 	csr.execute(sql)
 	comments = csr.fetchall()
 
-	reviewers_written = []	# Reviewer which has already written a comment in the patch
 	reviewers_List = [] 	# Reviewer which wrote comments in the patch Set (patch not equal patch Set)
 	reviewers_score = []
 
@@ -85,14 +92,9 @@ for Id in range(1, ReviewNum):
 		s = ReviewerFunctions.JudgeVoteScore(message)
 		if(s == 1 or s == -1):
 			vCt = vCt + 1
-	if vCt != ReserchCommentNum:
-		continue  # Skip the following
 	CommentNum = vCt
-	assert CommentNum == ReserchCommentNum
 
 	### Analysis (If CommentNum equals only ReserchCommentNum, the following code works)
-	index = 1  # @index:CommentIndex
-	score = 0  # @score:ScoreOfReliabilitys
 	for i, comment in enumerate(comments):
 		message = comment[2]
 		# Judge whether or not this patch was desided by decision comment<"merged, abandoned"> which mean [status] of reviewdata.
@@ -106,7 +108,6 @@ for Id in range(1, ReviewNum):
 				reviewer = comment[1]
 				reviewers_List.append(reviewer)
 				reviewers_score.append(s)
-				reviewers_written.append(reviewer)
 
 		else:
 			assert len(reviewers_List) == len(reviewers_score)
@@ -120,20 +121,29 @@ for Id in range(1, ReviewNum):
 				else:
 					reviewer.addIncur()
 
-				if CommentNum == ReserchCommentNum:
-					currentPar = reviewer.cur/float(reviewer.cur+reviewer.incur)
-					incurrentPar = reviewer.incur/float(reviewer.cur+reviewer.incur)
-					score = score + currentPar
-					if Id > outId:
-						print "%4d,%d,%2d,%3d,%3d,%f,%f,%f,%d,%s" % (Id, r, index, reviewer.cur, reviewer.incur, currentPar, incurrentPar, score, s, status)
-					index = index + 1
+				if (Id < outId) or (vote1 != reviewers_score[0]) or (ReserchCommentNum == 2 and CommentNum > 1 and vote2 != reviewers_score[1]):
+					continue
+
+				currentPar = reviewer.cur / float(reviewer.cur+reviewer.incur)
+				for i, t in enumerate(threshold):
+					if CommentNum == ReserchCommentNum:
+						if currentPar > t:
+							TP[i] = TP[i] + 1
+						else:
+							TN[i] = TN[i] + 1
+					else:
+						if currentPar > t:
+							FP[i] = FP[i] + 1
+						else:
+							FN[i] = FN[i] + 1
+
 			reviewers_List = []
 			reviewers_score = []
 
 	for (r, s) in zip(reviewers_List, reviewers_score):
 		if status == "merged":
 			judge = 2
-		else:     # status is abandoned
+		else: # status is abandoned
 			judge = -2
 
 		if not ReviewerFunctions.IsReviewerClass(r, reviewer_class):
@@ -145,11 +155,23 @@ for Id in range(1, ReviewNum):
 		else:
 			reviewer.addIncur()
 
-		if CommentNum == ReserchCommentNum:
-			currentPar = reviewer.cur/float(reviewer.cur+reviewer.incur)
-			incurrentPar = reviewer.incur/float(reviewer.cur+reviewer.incur)
-			score = score + currentPar
-			if Id > outId:
-				print "%4d,%d,%2d,%3d,%3d,%f,%f,%f,%d,%s" % (Id, r, index, reviewer.cur, reviewer.incur, currentPar, incurrentPar, score, s, status)
-			index = index + 1
-	#assert index == 3
+		if (Id < outId) or (vote1 != reviewers_score[0]) or (ReserchCommentNum == 2 and CommentNum > 1 and vote2 != reviewers_score[1]):
+			continue
+
+		currentPar = reviewer.cur / float(reviewer.cur+reviewer.incur)
+		for i, t in enumerate(threshold):
+			if CommentNum == ReserchCommentNum:
+				if currentPar > t:
+					TP[i] = TP[i] + 1
+				else:
+					TN[i] = TN[i] + 1
+			else:
+				if currentPar > t:
+					FP[i] = FP[i] + 1
+				else:
+					FN[i] = FN[i] + 1
+
+print "%2d,%2d" % (vote1, vote2)
+print "threshold, TP, TN, FP, FN"
+for i, t in enumerate(threshold):
+	print "%8f,%d,%d,%d,%d" % (t, TP[i], TN[i], FP[i], FN[i])
