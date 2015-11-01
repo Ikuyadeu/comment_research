@@ -115,26 +115,30 @@ for Id in range(1, ReviewNum):
 					ReviewerFunctions.MakeReviewerClass(r, reviewer_class)
 
 				reviewer = reviewer_class[r]
-				if ReviewerFunctions.IsCorrectVoting(r, s, judge):
-					reviewer.addCur()
-				else:
-					reviewer.addIncur()
+				if CommentNum == ReserchCommentNum:
+					if ReviewerFunctions.IsCorrectVoting(r, s, judge):
+						reviewer.addCur()
+					else:
+						reviewer.addIncur()
 
 				if (Id < outId) or (vote1 != reviewers_score[0]) or (ReserchCommentNum == 2 and CommentNum > 1 and vote2 != reviewers_score[1]):
 					continue
 
-				currentPar = reviewer.cur / float(reviewer.cur+reviewer.incur)
+				if (reviewer.cur+reviewer.incur == 0):
+					currentPar = 0
+				else:
+					currentPar = reviewer.cur / float(reviewer.cur+reviewer.incur)
 				for i, t in enumerate(threshold):
-					if CommentNum == ReserchCommentNum:
-						if currentPar > t:
+					if CommentNum > ReserchCommentNum:
+						if currentPar < t:
 							TP[i] = TP[i] + 1
 						else:
-							TN[i] = TN[i] + 1
+							FN[i] = FN[i] + 1
 					else:
 						if currentPar > t:
 							FP[i] = FP[i] + 1
 						else:
-							FN[i] = FN[i] + 1
+							TN[i] = TN[i] + 1
 
 			reviewers_List = []
 			reviewers_score = []
@@ -159,16 +163,16 @@ for Id in range(1, ReviewNum):
 
 		currentPar = reviewer.cur / float(reviewer.cur+reviewer.incur)
 		for i, t in enumerate(threshold):
-			if CommentNum == ReserchCommentNum:
-				if currentPar > t:
+			if CommentNum > ReserchCommentNum:
+				if currentPar < t:
 					TP[i] = TP[i] + 1
 				else:
-					TN[i] = TN[i] + 1
+					FN[i] = FN[i] + 1
 			else:
 				if currentPar > t:
 					FP[i] = FP[i] + 1
 				else:
-					FN[i] = FN[i] + 1
+					TN[i] = TN[i] + 1
 
 print "%2d,%2d" % (vote1, vote2)
 print "threshold, TP, TN, FP, FN"
