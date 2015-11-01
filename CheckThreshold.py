@@ -30,23 +30,20 @@ ReviewNum = csr.fetchall()[0][0] # 70705 <= Number Of Qt project's patchsets
 argv = sys.argv
 argc = len(argv)
 threshold = []
+vote = [] # Reserch vote score
 
 if argc >= 6:
 	ReserchCommentNum = int(argv[1])
 	threshold = [float(argv[2]),float(argv[3]),float(argv[4])]
-	vote1 = int(argv[5])
+	vote.append(int(argv[5]))
 	if argc >= 7:
-		vote2 = int(argv[6])
-	else:
-		vote2 = 0
+		vote.append(int(argv[6]))
 else:
 	ReserchCommentNum = 1
-	midian = 0.7
-	first = 0.6
-	mini = 0.4
-	vote1 = 1
-	vote2 = 0
+	threshold = [0.8897, 0.8872, 0.8782]
+	vote.append(1)
 
+assert len(vote) == ReserchCommentNum
 # out put Reviewid min
 outId = 10000;
 # Number of Comments to the patch one
@@ -121,24 +118,31 @@ for Id in range(1, ReviewNum):
 					else:
 						reviewer.addIncur()
 
-				if (Id < outId) or (vote1 != reviewers_score[0]) or (ReserchCommentNum == 2 and CommentNum > 1 and vote2 != reviewers_score[1]):
+				judge2 = False
+				for j,(v, rs) in enumerate(zip(vote, reviewers_score)):
+					if v != rs:
+						judge2 = True
+
+
+				if Id < outId or judge2 or CommentNum < ReserchCommentNum:
 					continue
 
 				if (reviewer.cur+reviewer.incur == 0):
 					currentPar = 0
 				else:
 					currentPar = reviewer.cur / float(reviewer.cur+reviewer.incur)
-				for i, t in enumerate(threshold):
+
+				for j, t in enumerate(threshold):
 					if CommentNum > ReserchCommentNum:
 						if currentPar < t:
-							TP[i] = TP[i] + 1
+							TP[j] = TP[j] + 1
 						else:
-							FN[i] = FN[i] + 1
+							FN[j] = FN[j] + 1
 					else:
-						if currentPar > t:
-							FP[i] = FP[i] + 1
+						if currentPar < t:
+							FP[j] = FP[j] + 1
 						else:
-							TN[i] = TN[i] + 1
+							TN[j] = TN[j] + 1
 
 			reviewers_List = []
 			reviewers_score = []
@@ -153,15 +157,25 @@ for Id in range(1, ReviewNum):
 			ReviewerFunctions.MakeReviewerClass(r, reviewer_class)
 
 		reviewer = reviewer_class[r]
-		if ReviewerFunctions.IsCorrectVoting(r, s, judge):
-			reviewer.addCur()
-		else:
-			reviewer.addIncur()
+		if CommentNum == ReserchCommentNum:
+			if ReviewerFunctions.IsCorrectVoting(r, s, judge):
+				reviewer.addCur()
+			else:
+				reviewer.addIncur()
 
-		if (Id < outId) or (vote1 != reviewers_score[0]) or (ReserchCommentNum == 2 and CommentNum > 1 and vote2 != reviewers_score[1]):
+		judge2 = False
+		for j,(v, rs) in enumerate(zip(vote, reviewers_score)):
+			if v != rs:
+				judge2 = True
+
+		if Id < outId or judge2  or CommentNum < ReserchCommentNum:
 			continue
 
-		currentPar = reviewer.cur / float(reviewer.cur+reviewer.incur)
+		if reviewer.cur+reviewer.incur == 0:
+			currentPar = 0
+		else:
+			currentPar = reviewer.cur / float(reviewer.cur+reviewer.incur)
+
 		for i, t in enumerate(threshold):
 			if CommentNum > ReserchCommentNum:
 				if currentPar < t:
@@ -169,12 +183,12 @@ for Id in range(1, ReviewNum):
 				else:
 					FN[i] = FN[i] + 1
 			else:
-				if currentPar > t:
+				if currentPar < t:
 					FP[i] = FP[i] + 1
 				else:
 					TN[i] = TN[i] + 1
 
-print "%2d,%2d" % (vote1, vote2)
+print vote
 print "threshold, TP, TN, FP, FN"
 for i, t in enumerate(threshold):
-	print "%8f,%d,%d,%d,%d" % (t, TP[i], TN[i], FP[i], FN[i])
+	print "%4f,%d,%d,%d,%d" % (t, TP[i], TN[i], FP[i], FN[i])

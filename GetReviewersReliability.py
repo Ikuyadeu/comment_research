@@ -76,10 +76,10 @@ for Id in range(1, ReviewNum):
 		s = ReviewerFunctions.JudgeVoteScore(message)
 		if(s == 1 or s == -1):
 			vCt = vCt + 1
-	#if vCt != ReserchCommentNum:
-	#	continue  # Skip the following
+	if vCt != ReserchCommentNum:
+		continue  # Skip the following
 	CommentNum = vCt
-	#assert CommentNum == ReserchCommentNum
+	assert CommentNum == ReserchCommentNum
 
 	### Analysis (If CommentNum equals only ReserchCommentNum, the following code works)
 	index = 1  # @index:CommentIndex
@@ -111,13 +111,12 @@ for Id in range(1, ReviewNum):
 				else:
 					reviewer.addIncur()
 
-				if CommentNum == ReserchCommentNum:
-					currentPar = reviewer.cur/float(reviewer.cur+reviewer.incur)
-					incurrentPar = reviewer.incur/float(reviewer.cur+reviewer.incur)
-					score = score + currentPar
-					if Id > outId:
+				currentPar = reviewer.cur/float(reviewer.cur+reviewer.incur)
+				incurrentPar = reviewer.incur/float(reviewer.cur+reviewer.incur)
+				score = score + currentPar
+				if Id > outId:
 						print "%4d,%d,%2d,%3d,%3d,%f,%f,%f,%d,%s" % (Id, r, index, reviewer.cur, reviewer.incur, currentPar, incurrentPar, score, s, status)
-					index = index + 1
+				index = index + 1
 			reviewers_List = []
 			reviewers_score = []
 
