@@ -17,28 +17,21 @@ from Class import ReviewerClass
 reviewer_class = defaultdict(lambda: 0)
 reviewer = []
 
-### Connect DB
-cnct = MySQLdb.connect(db="qt",user="root", passwd="password")
-csr = cnct.cursor()
-
-### Set default ReviewNum
-sql = "SELECT COUNT(*) FROM Review;"
-csr.execute(sql)
-ReviewNum = csr.fetchall()[0][0] # 70705 <= Number Of Qt project's patchsets
-
 # set original ReviewNum
 argv = sys.argv
 argc = len(argv)
 threshold = []
 vote = [] # Reserch vote score
 
-if argc >= 6:
-	ReserchCommentNum = int(argv[1])
-	threshold = [float(argv[2]),float(argv[3]),float(argv[4])]
-	vote.append(int(argv[5]))
-	if argc >= 7:
-		vote.append(int(argv[6]))
+if argc >= 7:
+	CurrentDB = argv[1]
+	ReserchCommentNum = int(argv[2])
+	threshold = [float(argv[3]),float(argv[4]),float(argv[5])]
+	vote.append(int(argv[6]))
+	if argc >= 8:
+		vote.append(int(argv[7]))
 else:
+	CurrentDB = "qt"
 	ReserchCommentNum = 1
 	threshold = [0.8897, 0.8872, 0.8782]
 	vote.append(1)
@@ -56,6 +49,16 @@ FN = [0,0,0] # False Nagative
 ### Main
 # @ScoreOfReliability: the sum of all reviewers' reliability in each patch
 # @VotingScore: the score that a reviewer voted. (+1 or -1)
+
+### Connect DB
+cnct = MySQLdb.connect(db=CurrentDB,user="root", passwd="password")
+csr = cnct.cursor()
+
+### Set default ReviewNum
+sql = "SELECT COUNT(*) FROM Review;"
+csr.execute(sql)
+ReviewNum = csr.fetchall()[0][0] # 70705 <= Number Of Qt project's patchsets
+
 
 #for Id in range(1, ReviewNum):
 for Id in range(1, ReviewNum):
@@ -189,6 +192,9 @@ for Id in range(1, ReviewNum):
 					TN[i] = TN[i] + 1
 
 print vote
-print "threshold, TP, TN, FP, FN"
+print "threshold, TP, TN, FP, FN, Precision, Recall, Accuracy"
 for i, t in enumerate(threshold):
-	print "%4f,%d,%d,%d,%d" % (t, TP[i], TN[i], FP[i], FN[i])
+	Precision = TP[i] / float(TP[i] + FP[i])
+	Recall = TP[i] / float(TP[i] + FN[i])
+	Accuracy = float(TP[i] + TN[i]) / float(TP[i] + FP[i] + TN[i] + FN[i])
+	print "%f,%d,%d,%d,%d,%f,%f,%f" % (t, TP[i], TN[i], FP[i], FN[i], Precision, Recall, Accuracy)

@@ -17,9 +17,19 @@ from Class import ReviewerClass
 reviewer_class = defaultdict(lambda: 0)
 reviewer = []
 
+# set original ReviewNum
+argv = sys.argv
+argc = len(argv)
+if argc == 3:
+	CurrentDB = int(argv[1])
+	ReserchCommentNum = int(argv[2])
+else:
+	CurrentDB = "qt"
+	ReserchCommentNum = 3
+
 ### Connect DB
 # db = qt or Openstack
-cnct = MySQLdb.connect(db="Openstack",user="root", passwd="password")
+cnct = MySQLdb.connect(db=CurrentDB,user="root", passwd="password")
 csr = cnct.cursor()
 
 ### Set default ReviewNum
@@ -27,13 +37,6 @@ sql = "SELECT COUNT(*) FROM Review;"
 csr.execute(sql)
 ReviewNum = csr.fetchall()[0][0] # 70705 <= Number Of Qt project's patchsets
 
-# set original ReviewNum
-argv = sys.argv
-argc = len(argv)
-if argc == 2:
-	ReserchCommentNum = int(argv[1])
-else:
-	ReserchCommentNum = 3
 
 # out put Reviewid min
 outId = 10000;
