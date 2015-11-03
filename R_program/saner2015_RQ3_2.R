@@ -43,11 +43,10 @@ for(i in index){ # first Comment
     name = paste("Vote:", j$VotingScore[1], ",", j$VotingScore[2], "Num:",length(j$CurrentPar),sep = "")
     print(name)
     result <- summary(value)
-    print(result)
 
     threshold = result[['1st Qu.']] - 1.5 * IQR(value)
     value = subset(j, CurrentPar > threshold)$CurrentPar
-    result <- min(value)
-    print(result)
+    trueMin <- min(value)
+    print(paste(result[['Median']],result[['1st Qu.']],trueMin,sep=","))
   }
 }

@@ -37,18 +37,13 @@ else:
 	vote.append(1)
 
 assert len(vote) == ReserchCommentNum
-# out put Reviewid min
-outId = 10000;
+
 # Number of Comments to the patch one
 
 TP = [0,0,0] # True Positive
 FP = [0,0,0]
 TN = [0,0,0]
 FN = [0,0,0] # False Nagative
-
-### Main
-# @ScoreOfReliability: the sum of all reviewers' reliability in each patch
-# @VotingScore: the score that a reviewer voted. (+1 or -1)
 
 ### Connect DB
 cnct = MySQLdb.connect(db=CurrentDB,user="root", passwd="password")
@@ -59,6 +54,31 @@ sql = "SELECT COUNT(*) FROM Review;"
 csr.execute(sql)
 ReviewNum = csr.fetchall()[0][0] # 70705 <= Number Of Qt project's patchsets
 
+# out put Reviewid min
+outId = 10000;
+
+# Num of Patch in Vote Comment
+inVoteNum = 0
+
+for Id in range(outId+1, ReviewNum):
+	sql = "SELECT Message "\
+	"FROM Comment "\
+	"WHERE ReviewId = '"+str(Id)+"';"
+	csr.execute(sql)
+	comments = csr.fetchall()
+	for comment in comments:
+		message = comment[0]
+		s = ReviewerFunctions.JudgeVoteScore(message)
+		if(s == 1 or s == -1):
+			inVoteNum += 1
+			break
+
+StartNum = outId + int(inVoteNum * 0.8) + 1
+
+
+### Main
+# @ScoreOfReliability: the sum of all reviewers' reliability in each patch
+# @VotingScore: the score that a reviewer voted. (+1 or -1)
 
 #for Id in range(1, ReviewNum):
 for Id in range(1, ReviewNum):
@@ -121,13 +141,13 @@ for Id in range(1, ReviewNum):
 					else:
 						reviewer.addIncur()
 
-				judge2 = False
+				notReserchVote = False
 				for j,(v, rs) in enumerate(zip(vote, reviewers_score)):
 					if v != rs:
-						judge2 = True
+						notReserchVote = True
 
 
-				if Id < outId or judge2 or CommentNum < ReserchCommentNum:
+				if Id < StartNum or notReserchVote or i + 1 != ReserchCommentNum:
 					continue
 
 				if (reviewer.cur+reviewer.incur == 0):
@@ -136,8 +156,8 @@ for Id in range(1, ReviewNum):
 					currentPar = reviewer.cur / float(reviewer.cur+reviewer.incur)
 
 				for j, t in enumerate(threshold):
-					if CommentNum > ReserchCommentNum:
-						if currentPar < t:
+					if CommentNum == ReserchCommentNum:
+						if currentPar >= t:
 							TP[j] = TP[j] + 1
 						else:
 							FN[j] = FN[j] + 1
@@ -150,7 +170,7 @@ for Id in range(1, ReviewNum):
 			reviewers_List = []
 			reviewers_score = []
 
-	for (r, s) in zip(reviewers_List, reviewers_score):
+	for i,(r, s) in enumerate(zip(reviewers_List, reviewers_score)):
 		if status == "merged":
 			judge = 2
 		else: # status is abandoned
@@ -166,35 +186,40 @@ for Id in range(1, ReviewNum):
 			else:
 				reviewer.addIncur()
 
-		judge2 = False
+		notReserchVote = False
 		for j,(v, rs) in enumerate(zip(vote, reviewers_score)):
 			if v != rs:
-				judge2 = True
+				notReserchVote = True
 
-		if Id < outId or judge2  or CommentNum < ReserchCommentNum:
+
+		if Id < StartNum or notReserchVote or i + 1 != ReserchCommentNum:
 			continue
 
-		if reviewer.cur+reviewer.incur == 0:
+		if (reviewer.cur+reviewer.incur == 0):
 			currentPar = 0
 		else:
 			currentPar = reviewer.cur / float(reviewer.cur+reviewer.incur)
 
-		for i, t in enumerate(threshold):
-			if CommentNum > ReserchCommentNum:
-				if currentPar < t:
-					TP[i] = TP[i] + 1
+		for j, t in enumerate(threshold):
+			if CommentNum == ReserchCommentNum:
+				if currentPar >= t:
+					TP[j] = TP[j] + 1
 				else:
-					FN[i] = FN[i] + 1
+					FN[j] = FN[j] + 1
 			else:
 				if currentPar < t:
-					FP[i] = FP[i] + 1
+					FP[j] = FP[j] + 1
 				else:
-					TN[i] = TN[i] + 1
+					TN[j] = TN[j] + 1
 
 print vote
-print "threshold, TP, TN, FP, FN, Precision, Recall, Accuracy"
+print "TP, TN, FP, FN, Precision, Recall, Accuracy, F1"
 for i, t in enumerate(threshold):
 	Precision = TP[i] / float(TP[i] + FP[i])
 	Recall = TP[i] / float(TP[i] + FN[i])
 	Accuracy = float(TP[i] + TN[i]) / float(TP[i] + FP[i] + TN[i] + FN[i])
-	print "%f,%d,%d,%d,%d,%f,%f,%f" % (t, TP[i], TN[i], FP[i], FN[i], Precision, Recall, Accuracy)
+	if Precision + Recall == 0:
+		F1 = 0
+	else:
+		F1 = 2 * Precision * Recall / (Precision + Recall)
+	print "%d,%d,%d,%d,%f,%f,%f,%f" % (TP[i], TN[i], FP[i], FN[i], Precision, Recall, Accuracy, F1)

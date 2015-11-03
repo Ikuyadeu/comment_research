@@ -21,7 +21,7 @@ reviewer = []
 argv = sys.argv
 argc = len(argv)
 if argc == 3:
-	CurrentDB = int(argv[1])
+	CurrentDB = argv[1]
 	ReserchCommentNum = int(argv[2])
 else:
 	CurrentDB = "qt"
@@ -40,7 +40,25 @@ ReviewNum = csr.fetchall()[0][0] # 70705 <= Number Of Qt project's patchsets
 
 # out put Reviewid min
 outId = 10000;
-# Number of Comments to the patch one
+
+# Num of Patch in Vote Comment
+inVoteNum = 0
+
+for Id in range(outId+1, ReviewNum):
+	sql = "SELECT Message "\
+	"FROM Comment "\
+	"WHERE ReviewId = '"+str(Id)+"';"
+	csr.execute(sql)
+	comments = csr.fetchall()
+	for comment in comments:
+		message = comment[0]
+		s = ReviewerFunctions.JudgeVoteScore(message)
+		if(s == 1 or s == -1):
+			inVoteNum += 1
+			break
+
+ReviewNum = outId + int(inVoteNum * 0.8)
+
 
 ### Main
 # @ScoreOfReliability: the sum of all reviewers' reliability in each patch
@@ -145,4 +163,3 @@ for Id in range(1, ReviewNum):
 			if Id > outId:
 				print "%4d,%d,%2d,%3d,%3d,%f,%f,%f,%d,%s" % (Id, r, index, reviewer.cur, reviewer.incur, currentPar, incurrentPar, score, s, status)
 			index = index + 1
-	#assert index == 3

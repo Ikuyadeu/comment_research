@@ -8,7 +8,7 @@
 num <- data.frame() # Init
 
 # Input csv
-num <- read.csv("CSVdata_q/numOfPatchsets_1.csv"
+num <- read.csv("CSVdata_o/numOfPatchsets_1.csv"
                  ,sep=",", header=TRUE)
 
 ### number of patchset's voting(+1, -1) is 1
@@ -30,15 +30,12 @@ index <- list(index_like, index_dislike)
 
 for(i in index){
   value = i$CurrentPar
-  name = paste("Vote:", i$VotingScore[1], "Status:", i$Status[1],"Num:",length(value),sep="")
-  jpeg(paste("pictureRQ3_q/RQ3_1",name,".jpg",sep=""))
-  boxplot(value, xlab="Reviewer order", ylab="Reliability", main=name, ylim=c(0,1))
+  name = paste("Vote:", i$VotingScore[1],"Num:",length(value),sep="")
   print(name)
   result <- summary(value)
-  print(result)
 
   threshold = result[['1st Qu.']] - 1.5 * IQR(value)
-  value = subset(j, CurrentPar > threshold)$CurrentPar
-  result <- min(value)
-  print(result)
+  value = subset(i, CurrentPar > threshold)$CurrentPar
+  trueMin <- min(value)
+  print(paste(result[['Median']],result[['1st Qu.']],trueMin,sep=","))
 }
