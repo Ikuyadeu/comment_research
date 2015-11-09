@@ -10,7 +10,7 @@
 num <- data.frame() # Init
 
 # Input csv
-num <- read.csv("CSVdata_q_3/numOfPatchsets_2.csv"
+num <- read.csv("CSVdata_o_3/numOfPatchsets_2.csv"
                  ,sep=",", header=TRUE)
 
 ### number of patchset's voting(+1, -1) is 1
@@ -53,7 +53,7 @@ for(i in index){
     for(k in j){ # second Comment
       value1 = k[[1]]$CurrentPar
       value2 = k[[2]]$CurrentPar
-      name = paste("Qt_2_", k[[1]]$VotingScore[1], k[[2]]$VotingScore[1],  "_", k[[1]]$Status[1],"_",length(value1),sep = "")
+      name = paste("Openstack_2_", k[[1]]$VotingScore[1], k[[2]]$VotingScore[1],  "_", k[[1]]$Status[1],"_",length(value1),sep = "")
       pdf(paste("pdf/",name,".pdf",sep=""))
       boxplot(value1, value2, ylim=c(0,1))
       print(name)
