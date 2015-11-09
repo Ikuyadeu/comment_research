@@ -180,11 +180,11 @@ for Id in range(1, ReviewNum):
 			ReviewerFunctions.MakeReviewerClass(r, reviewer_class)
 
 		reviewer = reviewer_class[r]
-		if CommentNum == ReserchCommentNum:
-			if ReviewerFunctions.IsCorrectVoting(r, s, judge):
-				reviewer.addCur()
-			else:
-				reviewer.addIncur()
+		#if CommentNum == ReserchCommentNum:
+		if ReviewerFunctions.IsCorrectVoting(r, s, judge):
+			reviewer.addCur()
+		else:
+			reviewer.addIncur()
 
 		notReserchVote = False
 		for j,(v, rs) in enumerate(zip(vote, reviewers_score)):

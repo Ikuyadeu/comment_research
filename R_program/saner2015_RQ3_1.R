@@ -8,7 +8,7 @@
 num <- data.frame() # Init
 
 # Input csv
-num <- read.csv("CSVdata_o/numOfPatchsets_1.csv"
+num <- read.csv("CSVdata_o_3/numOfPatchsets_1.csv"
                  ,sep=",", header=TRUE)
 
 ### number of patchset's voting(+1, -1) is 1
@@ -37,5 +37,5 @@ for(i in index){
   threshold = result[['1st Qu.']] - 1.5 * IQR(value)
   value = subset(i, CurrentPar > threshold)$CurrentPar
   trueMin <- min(value)
-  print(paste(result[['Median']],result[['1st Qu.']],trueMin,sep=","))
+  print(paste(result[['Median']],result[['1st Qu.']],trueMin,sep=" "))
 }
