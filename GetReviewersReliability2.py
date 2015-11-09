@@ -96,8 +96,8 @@ for Id in range(1, ReviewNum):
 		s = ReviewerFunctions.JudgeVoteScore(message)
 		if(s == 1 or s == -1):
 			vCt = vCt + 1
-	if vCt != ReserchCommentNum:
-		continue  # Skip the following
+	#if vCt != ReserchCommentNum:
+	#	continue  # Skip the following
 	CommentNum = vCt
 	assert CommentNum == ReserchCommentNum
 
