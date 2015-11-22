@@ -15,3 +15,23 @@ reviewers_List, reviewers_scoreは一度for (r, s) in zip(reviewers_List, review
 
 今回のレビューは以上です！
 以降，このソースを元に追加実装してください！
+
+
+
+Download from here: Firefox Developer Edition — Mozilla
+
+Extract it with file-roller and move the folder to its final location. A good practice is to install it in /opt/ or /usr/local/.
+
+Once you moved the files to their final location (say /opt/firefox_dev/), you can create the following file ~/.local/share/applications/firefox_dev.desktop to get a launcher with an icon distinct from normal Firefox.
+
+[Desktop Entry]
+Name=Firefox Developer
+GenericName=Firefox Developer Edition
+Exec=/opt/firefox_dev/firefox
+Terminal=false
+Icon=/opt/firefox_dev/browser/icons/mozicon128.png
+Type=Application
+Categories=Application;Network;X-Developer;
+Comment=Firefox Developer Edition Web Browser.
+
+To launch it, search for Firefox Developer, and simply run the firefox binary, and voilà.

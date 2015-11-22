@@ -147,7 +147,7 @@ for Id in range(1, ReviewNum):
 						notReserchVote = True
 
 
-				if Id < StartNum or notReserchVote or i + 1 != ReserchCommentNum:
+				if Id < StartNum or notReserchVote or i + 1 != ReserchCommentNum or CommentNum < ReserchCommentNum:
 					continue
 
 				if (reviewer.cur+reviewer.incur == 0):
@@ -192,7 +192,7 @@ for Id in range(1, ReviewNum):
 				notReserchVote = True
 
 
-		if Id < StartNum or notReserchVote or i + 1 != ReserchCommentNum:
+		if Id < StartNum or notReserchVote or i + 1 != ReserchCommentNum or CommentNum < ReserchCommentNum:
 			continue
 
 		if (reviewer.cur+reviewer.incur == 0):
@@ -213,7 +213,7 @@ for Id in range(1, ReviewNum):
 					TN[j] = TN[j] + 1
 
 print vote
-print "TP, TN, FP, FN, Precision, Recall, Accuracy, F1"
+print "Precision, Recall, F1"
 for i, t in enumerate(threshold):
 	Precision = TP[i] / float(TP[i] + FP[i])
 	Recall = TP[i] / float(TP[i] + FN[i])
@@ -222,4 +222,5 @@ for i, t in enumerate(threshold):
 		F1 = 0
 	else:
 		F1 = 2 * Precision * Recall / (Precision + Recall)
-	print "%d,%d,%d,%d,%f,%f,%f,%f" % (TP[i], TN[i], FP[i], FN[i], Precision, Recall, Accuracy, F1)
+	#print "%d,%d,%d,%d,%f,%f,%f,%f" % (TP[i], TN[i], FP[i], FN[i], Precision, Recall, Accuracy, F1)
+	print "%5.3f,%5.3f,%5.3f" % (Precision, Recall, Accuracy)

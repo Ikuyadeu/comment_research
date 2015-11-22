@@ -3,14 +3,13 @@
 ## @author:Yuki Ueda
 ## @createdOn:2015/10/15
 ########################
-#pdf("RQ2_1.pdf")
 
 
 ### Set data
 num <- data.frame() # Init
 
 # Input csv
-num <- read.csv("CSVdata_o_3/numOfPatchsets_1.csv"
+num <- read.csv("CSVdata_q_3/numOfPatchsets_1.csv"
                  ,sep=",", header=TRUE)
 
 ### number of patchset's voting(+1, -1) is 1
@@ -44,8 +43,8 @@ index <- list(index_abondone, index_merge)
 for(i in index){
   for(j in i){
     value = j$CurrentPar
-    name = paste("Openstack_1_", j$VotingScore[1], "_", j$Status[1],"_",length(value),sep = "")
-    pdf(paste("pdf/",name,".pdf",sep=""))
+    name = paste("QT_1_", j$VotingScore[1], "_", j$Status[1],"_",length(value),sep = "")
+    jpeg(paste("jpeg/",name,".jpg",sep=""))
     boxplot(value, ylim=c(0,1))
     print(name)
   }
