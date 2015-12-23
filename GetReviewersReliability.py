@@ -27,6 +27,14 @@ else:
 	CurrentDB = "qt"
 	ReserchCommentNum = 3
 
+# definition bot's id that must be removed
+if CurrentDB == "qt":
+	botId = 1000049
+else if CurrentDB = "Openstack":
+	botId = 3
+else:
+	botId = 0
+
 ### Connect DB
 # db = qt or Openstack
 cnct = MySQLdb.connect(db=CurrentDB,user="root", passwd="password")
@@ -39,45 +47,46 @@ ReviewNum = csr.fetchall()[0][0] # 70705 <= Number Of Qt project's patchsets
 
 
 # out put Reviewid min
-outId = 10000;
+outId = 0;
 
 # Num of Patch in Vote Comment
-inVoteNum = 0
+#inVoteNum = 0
 
-for Id in range(outId+1, ReviewNum):
-	sql = "SELECT Message "\
-	"FROM Comment "\
-	"WHERE ReviewId = '"+str(Id)+"';"
-	csr.execute(sql)
-	comments = csr.fetchall()
-	for comment in comments:
-		message = comment[0]
-		s = ReviewerFunctions.JudgeVoteScore(message)
-		if(s == 1 or s == -1):
-			inVoteNum += 1
-			break
+#for Id in range(outId+1, ReviewNum):
+#	sql = "SELECT Message "\
+#	"FROM Comment "\
+#	"WHERE ReviewId = '"+str(Id)+"';"
+#	csr.execute(sql)
+#	comments = csr.fetchall()
+#	for comment in comments:
+#		message = comment[0]
+#		s = ReviewerFunctions.JudgeVoteScore(message)
+#		if(s == 1 or s == -1):
+#			inVoteNum += 1
+#			break
 
-ReviewNum = outId + int(inVoteNum * 0.8)
+#ReviewNum = outId + int(inVoteNum * 0.8)
 
 
 ### Main
 # @ScoreOfReliability: the sum of all reviewers' reliability in each patch
 # @VotingScore: the score that a reviewer voted. (+1 or -1)
-print "ReviewId,Reviewerid,CommentIndex,NumOfCurrent,NumOfincurrent,CurrentPar,IncurrentPar,ScoreOfReliability,VotingScore,Status" # print clumn name
+print "ReviewId, Reviewerid, CommentIndex, NumOfCurrent, NumOfincurrent, CurrentPar, IncurrentPar, ScoreOfReliability, VotingScore, Status" # print clumn name
 
 #for Id in range(1, ReviewNum):
 for Id in range(1, ReviewNum):
-	sql = "SELECT ReviewId, Status "\
-	"FROM Review "\
-	"WHERE ReviewId = '"+str(Id)+"' "\
-	"AND (Status = 'merged' OR Status = 'abandoned');"
+	sql = "SELECT ReviewId, Status \
+	FROM Review \
+	WHERE ReviewId = '"+str(Id)+"' \
+	AND (Status = 'merged' OR Status = 'abandoned');"
 	csr.execute(sql)
 	info = csr.fetchall()
 
-	sql = "SELECT ReviewId, AuthorId, Message "\
-	"FROM Comment "\
-	"WHERE ReviewId = '"+str(Id)+"' "\
-	"ORDER BY WrittenOn ASC;"
+	sql = "SELECT ReviewId, AuthorId, Message \
+	FROM Comment \
+	WHERE ReviewId = '"+str(Id)+"' \
+	AND AuthorId != '"+str(botId)+"' \
+	ORDER BY WrittenOn ASC;"
 	csr.execute(sql)
 	comments = csr.fetchall()
 
@@ -97,8 +106,6 @@ for Id in range(1, ReviewNum):
 		s = ReviewerFunctions.JudgeVoteScore(message)
 		if(s == 1 or s == -1):
 			vCt = vCt + 1
-	#if vCt != ReserchCommentNum:
-	#	continue  # Skip the following
 	CommentNum = vCt
 
 	### Analysis (If CommentNum equals only ReserchCommentNum, the following code works)
@@ -136,8 +143,8 @@ for Id in range(1, ReviewNum):
 					incurrentPar = reviewer.incur/float(reviewer.cur+reviewer.incur)
 					score = score + currentPar
 					if Id > outId:
-							print "%4d,%d,%2d,%3d,%3d,%f,%f,%f,%d,%s" % (Id, r, index, reviewer.cur, reviewer.incur, currentPar, incurrentPar, score, s, status)
-							
+							print "%4d, %d, %2d, %3d, %3d, %f, %f, %f, %d, %s" % (Id, r, index, reviewer.cur, reviewer.incur, currentPar, incurrentPar, score, s, status)
+
 				index = index + 1
 			reviewers_List = []
 			reviewers_score = []
@@ -162,5 +169,5 @@ for Id in range(1, ReviewNum):
 			incurrentPar = reviewer.incur/float(reviewer.cur+reviewer.incur)
 			score = score + currentPar
 			if Id > outId:
-				print "%4d,%d,%2d,%3d,%3d,%f,%f,%f,%d,%s" % (Id, r, index, reviewer.cur, reviewer.incur, currentPar, incurrentPar, score, s, status)
+				print "%4d, %d, %2d, %3d, %3d, %f, %f, %f, %d, %s" % (Id, r, index, reviewer.cur, reviewer.incur, currentPar, incurrentPar, score, s, status)
 			index = index + 1
