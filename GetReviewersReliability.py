@@ -30,7 +30,7 @@ else:
 # definition bot's id that must be removed
 if CurrentDB == "qt":
 	botId = 1000049
-else if CurrentDB = "Openstack":
+elif CurrentDB == "Openstack":
 	botId = 3
 else:
 	botId = 0
@@ -45,35 +45,11 @@ sql = "SELECT COUNT(*) FROM Review;"
 csr.execute(sql)
 ReviewNum = csr.fetchall()[0][0] # 70705 <= Number Of Qt project's patchsets
 
-
-# out put Reviewid min
-outId = 0;
-
-# Num of Patch in Vote Comment
-#inVoteNum = 0
-
-#for Id in range(outId+1, ReviewNum):
-#	sql = "SELECT Message "\
-#	"FROM Comment "\
-#	"WHERE ReviewId = '"+str(Id)+"';"
-#	csr.execute(sql)
-#	comments = csr.fetchall()
-#	for comment in comments:
-#		message = comment[0]
-#		s = ReviewerFunctions.JudgeVoteScore(message)
-#		if(s == 1 or s == -1):
-#			inVoteNum += 1
-#			break
-
-#ReviewNum = outId + int(inVoteNum * 0.8)
-
-
 ### Main
 # @ScoreOfReliability: the sum of all reviewers' reliability in each patch
 # @VotingScore: the score that a reviewer voted. (+1 or -1)
 print "ReviewId, Reviewerid, CommentIndex, NumOfCurrent, NumOfincurrent, CurrentPar, IncurrentPar, ScoreOfReliability, VotingScore, Status" # print clumn name
 
-#for Id in range(1, ReviewNum):
 for Id in range(1, ReviewNum):
 	sql = "SELECT ReviewId, Status \
 	FROM Review \
@@ -92,6 +68,7 @@ for Id in range(1, ReviewNum):
 
 	reviewers_written = []	# Reviewer which has already written a comment in the patch
 	reviewers_List = [] 	# Reviewer which wrote comments in the patch Set (patch not equal patch Set)
+	reviewers_first_score = []
 	reviewers_score = []
 
 	### Extract status
@@ -99,34 +76,67 @@ for Id in range(1, ReviewNum):
 	for information in info:
 		status = information[1]
 
-	### Limitation for CommentNum (@author:toshiki.hirao)
-	vCt = 0 # Number of voting "+1" or ""-1"
-	for comment in comments:
-		message = comment[2]
-		s = ReviewerFunctions.JudgeVoteScore(message)
-		if(s == 1 or s == -1):
-			vCt = vCt + 1
-	CommentNum = vCt
-
 	### Analysis (If CommentNum equals only ReserchCommentNum, the following code works)
-	index = 1  # @index:CommentIndex
-	score = 0  # @score:ScoreOfReliabilitys
-	for i, comment in enumerate(comments):
+	CommentNum = 0
+	for comment in comments:
+		reviewer = comment[1]
 		message = comment[2]
 		# Judge whether or not this patch was desided by decision comment<"merged, abandoned"> which mean [status] of reviewdata.
 		# And, We regard that "updated ---" comment is also decision comment.
 		# And, We regard that +2 score comment is the same as "merged", -2 score comment is the same as "abandoned".
 		# Summary -> "merged, abandoned, 'updated --- ', +2, -2" is {JudgeDicisionMaking commnet}
+
 		judge = ReviewerFunctions.JudgeDicisionMaking(message)
-		if judge == 0:
+
+		# comment is judge vote
+		if judge != 0:
+			break
+
+		# get vote message and reviewer's Id
+		s = ReviewerFunctions.JudgeVoteScore(message)
+		if s != 0:	# remove update comment and not votecomment
+			if reviewer not in reviewers_written:
+				reviewers_written.append(reviewer)
+				reviewers_first_score.append(s)
+				CommentNum += 1
+
+
+	assert CommentNum == len(reviewers_written)
+
+	# output information of firstVote
+	score = 0  # @score:ScoreOfReliabilitys
+	for index, (r, s) in enumerate(zip(reviewers_written, reviewers_first_score)):
+		if not ReviewerFunctions.IsReviewerClass(r, reviewer_class):
+			ReviewerFunctions.MakeReviewerClass(r, reviewer_class)
+
+		reviewer = reviewer_class[r]
+		if CommentNum == ReserchCommentNum:
+			if reviewer.cur+reviewer.incur != 0:
+				currentPar = float(reviewer.cur) / (reviewer.cur+reviewer.incur)
+				incurrentPar = float(reviewer.incur) / (reviewer.cur+reviewer.incur)
+			else:
+				currentPar = 0
+				incurrentPar = 0
+			score = score + currentPar
+			print "%4d, %d, %2d, %3d, %3d, %f, %f, %f, %d, %s" % (Id, r, index + 1, reviewer.cur, reviewer.incur, currentPar, incurrentPar, score, s, status)
+
+	# collect all vote in comments
+	for comment in comments:
+		message = comment[2]
+		judge = ReviewerFunctions.JudgeDicisionMaking(message)
+		if judge != 0:
+			break
+
+		if not ReviewerFunctions.IsUpdate(message):
 			s = ReviewerFunctions.JudgeVoteScore(message)
 			if(s == 1 or s == -1):
 				reviewer = comment[1]
 				reviewers_List.append(reviewer)
 				reviewers_score.append(s)
-				reviewers_written.append(reviewer)
 
 		else:
+			# calc Current
+			judge = -2
 			assert len(reviewers_List) == len(reviewers_score)
 			for (r, s) in zip(reviewers_List, reviewers_score):
 				if not ReviewerFunctions.IsReviewerClass(r, reviewer_class):
@@ -138,17 +148,10 @@ for Id in range(1, ReviewNum):
 				else:
 					reviewer.addIncur()
 
-				if CommentNum == ReserchCommentNum:
-					currentPar = reviewer.cur/float(reviewer.cur+reviewer.incur)
-					incurrentPar = reviewer.incur/float(reviewer.cur+reviewer.incur)
-					score = score + currentPar
-					if Id > outId:
-							print "%4d, %d, %2d, %3d, %3d, %f, %f, %f, %d, %s" % (Id, r, index, reviewer.cur, reviewer.incur, currentPar, incurrentPar, score, s, status)
-
-				index = index + 1
 			reviewers_List = []
 			reviewers_score = []
 
+	# calc Current
 	for (r, s) in zip(reviewers_List, reviewers_score):
 		if status == "merged":
 			judge = 2
@@ -163,11 +166,3 @@ for Id in range(1, ReviewNum):
 			reviewer.addCur()
 		else:
 			reviewer.addIncur()
-
-		if CommentNum == ReserchCommentNum:
-			currentPar = reviewer.cur/float(reviewer.cur+reviewer.incur)
-			incurrentPar = reviewer.incur/float(reviewer.cur+reviewer.incur)
-			score = score + currentPar
-			if Id > outId:
-				print "%4d, %d, %2d, %3d, %3d, %f, %f, %f, %d, %s" % (Id, r, index, reviewer.cur, reviewer.incur, currentPar, incurrentPar, score, s, status)
-			index = index + 1

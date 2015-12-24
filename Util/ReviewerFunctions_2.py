@@ -23,40 +23,40 @@ from Class import ReviewerClass
 ######
 def JudgeVoteScore(m): # (Regular expression)
     # Score +1
-	plusVote = []
-	plusVote.append(r'Patch Set [1-9]*: Looks good to me, but someone else must approve') #
-	plusVote.append(r'Patch Set [1-9]*: Works for me')
-	plusVote.append(r'Patch Set [1-9]*: Verified')
-	plusVote.append(r'Patch Set [1-9]*: Sanity review passed') #
-	plusVote.append(r'Patch Set [1-9]*: Code-Review\+1')
-	plusVote.append(r'Patch Set [1-9]*: Workflow\+1')
-	plusVote.append(r'Patch Set [1-9]*: Looks good to me, approved') #
-	plusVote.append(r'Patch Set [1-9]*: Looks good to me<br>')
+	positiveVote = []
+	positiveVote.append(r'Patch Set [1-9]*: Looks good to me, but someone else must approve') #
+	positiveVote.append(r'Patch Set [1-9]*: Works for me')
+	positiveVote.append(r'Patch Set [1-9]*: Verified')
+	positiveVote.append(r'Patch Set [1-9]*: Sanity review passed') #
+	positiveVote.append(r'Patch Set [1-9]*: Code-Review\+1')
+	positiveVote.append(r'Patch Set [1-9]*: Workflow\+1')
+	positiveVote.append(r'Patch Set [1-9]*: Looks good to me, approved') #
+	positiveVote.append(r'Patch Set [1-9]*: Looks good to me<br>')
 
-	for p in plusVote:
+	for p in positiveVote:
 		if p.match(m):
 			return 1
 
     # Score -1
-	plusVote.append(r"Patch Set [1-9]*: I would prefer that you didn'*t submit this") #
-	plusVote.append(r'Patch Set [1-9]*: Sanity problems found') #
-	plusVote.append(r'Patch Set [1-9]*: Code-Review-1')
-	plusVote.append(r'Patch Set [1-9]*: Workflow-1')
-	plusVote.append(r"Patch Set [1-9]*: Doesn'*t seem to work")
-	plusVote.append(r"Patch Set [1-9]*: I would prefer that you didn'*t merge this")
-	plusVote.append(r'Patch Set [1-9]*: No score')
-	plusVote.append(r'Patch Set [1-9]*: Do not merge') #
-	plusVote.append(r'Patch Set [1-9]*: Do not submit') #
-	plusVote.append(r'Patch Set [1-9]*: Major sanity problems found') #
-	plusVote.append(r'Patch Set [1-9]*: Fails')
+	negativeVote.append(r"Patch Set [1-9]*: I would prefer that you didn'*t submit this") #
+	negativeVote.append(r'Patch Set [1-9]*: Sanity problems found') #
+	negativeVote.append(r'Patch Set [1-9]*: Code-Review-1')
+	negativeVote.append(r'Patch Set [1-9]*: Workflow-1')
+	negativeVote.append(r"Patch Set [1-9]*: Doesn'*t seem to work")
+	negativeVote.append(r"Patch Set [1-9]*: I would prefer that you didn'*t merge this")
+	negativeVote.append(r'Patch Set [1-9]*: No score')
+	negativeVote.append(r'Patch Set [1-9]*: Do not merge') #
+	negativeVote.append(r'Patch Set [1-9]*: Do not submit') #
+	negativeVote.append(r'Patch Set [1-9]*: Major sanity problems found') #
+	negativeVote.append(r'Patch Set [1-9]*: Fails')
 
-	for p in plusVote:
+	for p in negativeVote:
 		if p.match(m):
 			return -1
 
     # Score 0
 	"""
-	p1plusVote.append(r'Patch Set [1-9]*: No score')
+	p1.append(r'Patch Set [1-9]*: No score')
 	if p1.match(m):
 		return 0
 	"""
@@ -66,21 +66,12 @@ def JudgeVoteScore(m): # (Regular expression)
 # Judge whether the comment is Dicision or not
 # @m:message
 def JudgeDicisionMaking(m):
-	# Score +2
-	Comment = []
-	plusVote.append(r'Patch Set [1-9]*: Looks good to me, approved') #
-	plusVote.append(r'Patch Set [1-9]*: Looks good to me<br>')
-
-	if p1.match(m) or p2.match(m):
+	# merge
+	if re.compile(r'Abandoned').match(m):
 		return 2
 
-	# Score -2
-	plusVote.append(r'Patch Set [1-9]*: Do not merge') #
-	plusVote.append(r'Patch Set [1-9]*: Do not submit') #
-	plusVote.append(r'Patch Set [1-9]*: Major sanity problems found') #
-	plusVote.append(r'Uploaded patch set [1-9]*') #
-	plusVote.append(r'Patch Set [1-9]*: Fails') #
-	if p1.match(m) or p2.match(m) or p3.match(m) or p4.match(m) or p5.match(m):
+	# abandoned
+	if re.compile(r'Change has been successfully cherry-picked').match(m):
 		return -2
 
 	# Not JudgeDicisionMaking
