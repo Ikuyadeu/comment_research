@@ -10,30 +10,14 @@
 import sys
 import MySQLdb
 from collections import defaultdict
-from Util import ReviewerFunctions
-from Class import ReviewerClass
-
-### Init
-reviewer_class = defaultdict(lambda: 0)
-reviewer = []
 
 # set original ReviewNum
 argv = sys.argv
 argc = len(argv)
-if argc == 3:
+if argc == 2:
 	CurrentDB = argv[1]
-	ReserchCommentNum = int(argv[2])
 else:
 	CurrentDB = "qt"
-	ReserchCommentNum = 3
-
-# definition bot's id that must be removed
-if CurrentDB == "qt":
-	botId = 1000049
-elif CurrentDB == "Openstack":
-	botId = 3
-else:
-	botId = 0
 
 ### Connect DB
 # db = qt or Openstack
