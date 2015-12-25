@@ -50,7 +50,7 @@ ReviewNum = csr.fetchall()[0][0] # 70705 <= Number Of Qt project's patchsets
 # @VotingScore: the score that a reviewer voted. (+1 or -1)
 print "ReviewId, Reviewerid, CommentIndex, NumOfCurrent, NumOfincurrent, CurrentPar, IncurrentPar, ScoreOfReliability, VotingScore, Status" # print clumn name
 
-for Id in range(1, ReviewNum):
+for Id in range(1, 10):
 	sql = "SELECT ReviewId, Status \
 	FROM Review \
 	WHERE ReviewId = '"+str(Id)+"' \
@@ -70,6 +70,7 @@ for Id in range(1, ReviewNum):
 	reviewers_List = [] 	# Reviewer which wrote comments in the patch Set (patch not equal patch Set)
 	reviewers_first_score = []
 	reviewers_score = []
+	cii = []
 
 	### Extract status
 	assert len(info) == 0 or len(info) == 1
@@ -78,25 +79,21 @@ for Id in range(1, ReviewNum):
 
 	### Analysis (If CommentNum equals only ReserchCommentNum, the following code works)
 	CommentNum = 0
-	for comment in comments:
+	for ci,comment in enumerate(comments):
+		assert len(reviewers_first_score) == len(reviewers_written)
 		reviewer = comment[1]
 		message = comment[2]
 
 		judge = ReviewerFunctions.JudgeDicisionMaking(message)
-
 		# comment is judge vote
 		if judge != 0:
 			break
-
-		if ReviewerFunctions.IsUpdate(message):
-			continue
-
-		# get vote message and reviewer's Id
-		s = ReviewerFunctions.JudgeVoteScore(message)
-		if s != 0:	# remove update comment and not votecomment
-			if reviewer not in reviewers_written:
+		elif not ReviewerFunctions.IsUpdate(message):
+			if ReviewerFunctions.JudgeVoteScore(message) != 0:	# remove update comment and not votecomment
+				#	if reviewer not in reviewers_written:
 				reviewers_written.append(reviewer)
-				reviewers_first_score.append(s)
+				reviewers_first_score.append(ReviewerFunctions.JudgeVoteScore(message))
+				cii.append(ci)
 				CommentNum += 1
 
 
@@ -104,20 +101,19 @@ for Id in range(1, ReviewNum):
 
 	# output information of firstVote
 	score = 0  # @score:ScoreOfReliabilitys
-	for index, (r, s) in enumerate(zip(reviewers_written, reviewers_first_score)):
+	for index, (r, s, c) in enumerate(zip(reviewers_written, reviewers_first_score, cii)):
 		if not ReviewerFunctions.IsReviewerClass(r, reviewer_class):
 			ReviewerFunctions.MakeReviewerClass(r, reviewer_class)
 
 		reviewer = reviewer_class[r]
-		if CommentNum == ReserchCommentNum:
-			if reviewer.cur+reviewer.incur != 0:
-				currentPar = float(reviewer.cur) / (reviewer.cur+reviewer.incur)
-				incurrentPar = float(reviewer.incur) / (reviewer.cur+reviewer.incur)
-			else:
-				currentPar = 0
-				incurrentPar = 0
-			score = score + currentPar
-			print "%4d, %d, %2d, %3d, %3d, %f, %f, %f, %d, %s" % (Id, r, index + 1, reviewer.cur, reviewer.incur, currentPar, incurrentPar, score, s, status)
+		if reviewer.cur+reviewer.incur != 0:
+			currentPar = float(reviewer.cur) / (reviewer.cur+reviewer.incur)
+			incurrentPar = float(reviewer.incur) / (reviewer.cur+reviewer.incur)
+		else:
+			currentPar = 0
+			incurrentPar = 0
+		score = score + currentPar
+		print "%4d, %d, %2d, %3d, %3d, %f, %f, %f, %d, %s,%d" % (Id, r, index + 1, reviewer.cur, reviewer.incur, currentPar, incurrentPar, score, s, status,c)
 
 	# collect all vote in comments
 	for comment in comments:

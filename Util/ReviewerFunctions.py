@@ -68,11 +68,11 @@ def JudgeVoteScore(m): # (Regular expression)
 # @m:message
 def JudgeDicisionMaking(m):
 	# merge
-	if re.compile(r'Abandoned').match(m):
+	if re.compile(r'Change has been successfully cherry-picked').match(m):
 		return 2
 
 	# abandoned
-	if re.compile(r'Change has been successfully cherry-picked').match(m):
+	if re.compile(r'Abandoned').match(m):
 		return -2
 
 	# Not JudgeDicisionMaking
