@@ -44,6 +44,7 @@ csr = cnct.cursor()
 sql = "SELECT COUNT(*) FROM Review;"
 csr.execute(sql)
 ReviewNum = csr.fetchall()[0][0] # 70705 <= Number Of Qt project's patchsets
+StartId = int(ReviewNum * 0.1)
 
 ### Main
 # @ScoreOfReliability: the sum of all reviewers' reliability in each patch
@@ -103,21 +104,22 @@ for Id in range(1, ReviewNum):
 	assert CommentNum == len(reviewers_written)
 
 	# output information of firstVote
-	score = 0  # @score:ScoreOfReliabilitys
-	for index, (r, s) in enumerate(zip(reviewers_written, reviewers_first_score)):
-		if not ReviewerFunctions.IsReviewerClass(r, reviewer_class):
-			ReviewerFunctions.MakeReviewerClass(r, reviewer_class)
+	if Id > StartId:
+		score = 0  # @score:ScoreOfReliabilitys
+		for index, (r, s) in enumerate(zip(reviewers_written, reviewers_first_score)):
+			if not ReviewerFunctions.IsReviewerClass(r, reviewer_class):
+				ReviewerFunctions.MakeReviewerClass(r, reviewer_class)
 
-		reviewer = reviewer_class[r]
-		if CommentNum == ReserchCommentNum:
-			if reviewer.cur+reviewer.incur != 0:
-				currentPar = float(reviewer.cur) / (reviewer.cur+reviewer.incur)
-				incurrentPar = float(reviewer.incur) / (reviewer.cur+reviewer.incur)
-			else:
-				currentPar = 0
-				incurrentPar = 0
-			score = score + currentPar
-			print "%4d, %d, %2d, %3d, %3d, %f, %f, %f, %d, %s" % (Id, r, index + 1, reviewer.cur, reviewer.incur, currentPar, incurrentPar, score, s, status)
+			reviewer = reviewer_class[r]
+			if CommentNum == ReserchCommentNum:
+				if reviewer.cur+reviewer.incur != 0:
+					currentPar = float(reviewer.cur) / (reviewer.cur+reviewer.incur)
+					incurrentPar = float(reviewer.incur) / (reviewer.cur+reviewer.incur)
+				else:
+					currentPar = 0
+					incurrentPar = 0
+				score = score + currentPar
+				print "%4d, %d, %2d, %3d, %3d, %f, %f, %f, %d, %s" % (Id, r, index + 1, reviewer.cur, reviewer.incur, currentPar, incurrentPar, score, s, status)
 
 	# collect all vote in comments
 	for comment in comments:

@@ -9,7 +9,7 @@
 num <- data.frame() # Init
 
 # Input csv
-num <- read.csv("CSVdata_oss/numOfPatchsets_qt_3.csv"
+num <- read.csv("CSVdata_oss/numOfPatchsets_os_3.csv"
                  ,sep=",", header=TRUE)
 
 ### number of patchset's voting(+1, -1) is 1
@@ -55,7 +55,7 @@ for(i in index){
       value1 = k[[1]]$CurrentPar
       value2 = k[[2]]$CurrentPar
       value3 = k[[3]]$CurrentPar
-      name = paste("QT_3_", k[[1]]$VotingScore[1], k[[2]]$VotingScore[1], k[[3]]$VotingScore[1], "_",length(value1),sep = "")
+      name = paste("OS_3_", k[[1]]$VotingScore[1], k[[2]]$VotingScore[1], k[[3]]$VotingScore[1], "_",length(value1),sep = "")
       pdf(paste("OSS_pdf/",name,".pdf",sep=""))
       boxplot(value1, value2,  value3, ylim=c(0,1))
       print(name)
