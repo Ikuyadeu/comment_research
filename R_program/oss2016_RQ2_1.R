@@ -30,8 +30,8 @@ index <- list(index_l, index_d)
 
 for(i in index){
   value = i$CurrentPar
-  name = paste("QT_1_", i$VotingScore[1], "_",length(value),sep = "")
-  pdf(paste("osS_pdf/",name,".pdf",sep=""))
+  name = paste("OS_1_", i$VotingScore[1], "_",length(value),sep = "")
+  pdf(paste("OSS_pdf/",name,".pdf",sep=""))
   boxplot(value, ylim=c(0,1))
   print(name)
 }
