@@ -34,3 +34,338 @@ ReviewId,Status
    8, 1,1000006, Change has been successfully cherry-picked as 0d3d38ecc1fe0a0fc9eeb67d83d2aa73522021f8. ,Merge, merged
    9, 0,1000003, Patch Set 1: Looks good to me, approved  Ugly code, but well ... ,+1, merged
    9, 1,1000003, Change has been successfully cherry-picked as b0d093b0d7095d4b4d2de38dc965690c7b540d37. ,Merge, merged
+  10, 0,1000009, Patch Set 1: Looks good to me, approved   ,+1, merged
+  10, 1,1000009, Change has been successfully cherry-picked as 9f7fdc55510c37694fffbd04937a0e5d4d87063d. ,Merge, merged
+  11, 0,1000004, Patch Set 1: I would prefer that you didnt submit this  (1 inline comment)   ,-1, abandoned
+  12, 0,1000009, Patch Set 1: Looks good to me, approved   ,+1, merged
+  12, 1,1000009, Change has been successfully cherry-picked as 782953513ef231566cfde65d0d94f45eb3dae495. ,Merge, merged
+  13, 0,1000019, Patch Set 1: Looks good to me, approved  looks fine. ,+1, merged
+  13, 1,1000018, Change has been successfully cherry-picked as 86d5df063cda54c6eb2e32fb6496a23c8ef0de81. ,Merge, merged
+  14, 0,1000019, Patch Set 1: Looks good to me, approved  Looks fine. ,+1, merged
+  14, 1,1000019, Change has been successfully cherry-picked as c5ce20c5f74d3ee6d665b3aedd9822a5ff204bc4. ,Merge, merged
+  15, 0,1000015, Patch Set 1: Looks good to me, approved   ,+1, merged
+  15, 1,1000015, Change has been successfully cherry-picked as 9d72a6e7c834d24dc5bbefd6c35e8f2cfbdc1e2f. ,Merge, merged
+  16, 0,1000007, Uploaded patch set 2. ,Update, merged
+  16, 1,1000007, Patch Set 2: Looks good to me, approved   ,+1, merged
+  16, 2,1000007, Change has been successfully cherry-picked as c960be456d0b9ce15063e646431c6072acafbe67. ,Merge, merged
+  17, 0,1000020, Uploaded patch set 2. ,Update, merged
+  17, 1,1000029, Patch Set 2: Looks good to me, but someone else must approve   ,+1, merged
+  17, 2,1000029, Patch Set 2: Looks good to me, approved   ,+1, merged
+  17, 3,1000029, Change has been successfully cherry-picked as 578acaf2801d3225db9aa4bfc6b56898cca77df5. ,Merge, merged
+  18, 0,1000009, Change has been successfully cherry-picked as 0262795c935045368247167dea94076e23eb2229. ,Merge, merged
+  19, 0,1000007, Patch Set 1: I would prefer that you didnt submit this  (3 inline comments)   ,-1, abandoned
+  20, 0,1000009, Change has been successfully cherry-picked as e54a959ef12045228c2d216b3583968063c895b8. ,Merge, merged
+  21, 2,1000006, Change has been successfully cherry-picked as 15ac4f0e21c63826a70650e68c433898306307d1. ,Merge, merged
+  22, 2,1000006, Uploaded patch set 2. ,Update, merged
+  22, 3,1000007, Patch Set 2: Looks good to me, approved   ,+1, merged
+  22, 4,1000007, Change has been successfully cherry-picked as c86e81c362411d1f766d36f0f0946a5039fb65fd. ,Merge, merged
+  23, 0,1000003, Change has been successfully cherry-picked as 033cf46e512ff43326557e4102cf6cced982930f. ,Merge, merged
+  24, 0,1000007, Change has been successfully cherry-picked as f7a4fceb3c0c07e5286b6ae58853ea1c705c0728. ,Merge, merged
+  25, 0,1000020, Change has been successfully cherry-picked as d4e5b81e436727e68c97a4eda98533733731cb3e. ,Merge, merged
+  26, 0,1000011, Patch Set 1: Looks good to me, approved   ,+1, merged
+  26, 1,1000011, Change has been successfully cherry-picked as ced48beb6f554f8a8b9018ca1df1a4aa51940639. ,Merge, merged
+  27, 0,1000020, Patch Set 1: Looks good to me, approved   ,+1, merged
+  27, 1,1000020, Change has been successfully cherry-picked as 956bac297b5b888474889ca1f3acd81a873f3b46. ,Merge, merged
+  28, 0,1000006, Change has been successfully cherry-picked as 9c882d80795807336b8ac58fff29dbc306be2fb9. ,Merge, merged
+  29, 0,1000015, Patch Set 1: Looks good to me, approved   ,+1, merged
+  29, 1,1000015, Change has been successfully cherry-picked as 705d450910f80465b58f3dc30a1d37e467188d5d. ,Merge, merged
+  30, 0,1000015, Patch Set 1: Looks good to me, approved   ,+1, merged
+  30, 1,1000015, Change has been successfully cherry-picked as c31bc05e2e333d242ac5d8015d089281a1ca356a. ,Merge, merged
+  31, 0,1000011, Uploaded patch set 2. ,Update, merged
+  31, 1,1000049, Patch Set 2: Looks good to me, but someone else must approve   ,+1, merged
+  31, 2,1000024, Change has been successfully cherry-picked as 84f60e5fda5f4b30cc21a05276b3adc4fb5b03a1. ,Merge, merged
+  32, 0,1000004, Uploaded patch set 2. ,Update, merged
+  32, 1,1000020, Patch Set 2: I would prefer that you didnt submit this  Im not sure whether adding a member in IFile just because of that is a good approach. This highlight info bar is only used by the plain text editor and if the user has this option set. This is probably a significant minority (if any) of all IFile instances around a given moment.  I would suggest a more scalable solution in which IFile is able to *identify* the active info bars and in the case of a request for a duplicate bar it could simply ignore it (the API could make that clear). ,-1, merged
+  32, 2,1000004, Uploaded patch set 3. ,Update, merged
+  32, 3,1000020, Patch Set 3: I would prefer that you didnt submit this  I would still prefer my previous suggestion... But if you go for this bool member approach Im ok if its added to the PlainTextEditorWidget itself, since its the only editor to which this warning message exists and make sense (and it already has other members related to this like, for example, m_isMissingSyntaxDefinition). ,-1, merged
+  32, 4,1000020, Patch Set 3: Looks good to me, approved  Ok, I would still prefer the previous suggestion... But I think its ok to keep this for now. We should keep it in mind to improve the info bar. ,+1, merged
+  32, 5,1000020, Change has been successfully cherry-picked as 61afe9d36582665822baefe2c87f5975e05036da. ,Merge, merged
+  33, 0,1000009, Change has been successfully cherry-picked as 044915b2c18708c3f7f99e6c76a09441302764f4. ,Merge, merged
+  34, 0,1000028, Uploaded patch set 2. ,Update, merged
+  34, 1,1000028, Uploaded patch set 3. ,Update, merged
+  34, 2,1000049, Patch Set 3: Looks good to me, but someone else must approve   ,+1, merged
+  34, 3,1000028, Uploaded patch set 4. ,Update, merged
+  34, 4,1000049, Patch Set 4: Looks good to me, but someone else must approve   ,+1, merged
+  34, 5,1000028, Uploaded patch set 5. ,Update, merged
+  34, 6,1000049, Patch Set 5: Looks good to me, but someone else must approve   ,+1, merged
+  34, 7,1000028, Uploaded patch set 6. ,Update, merged
+  34, 8,1000049, Patch Set 6: Looks good to me, but someone else must approve   ,+1, merged
+  34, 9,1000028, Uploaded patch set 7. ,Update, merged
+  34, 10,1000028, Uploaded patch set 8. ,Update, merged
+  34, 11,1000028, Uploaded patch set 9. ,Update, merged
+  34, 12,1000028, Uploaded patch set 10. ,Update, merged
+  34, 14,1000028, Uploaded patch set 11. ,Update, merged
+  34, 15,1000028, Patch Set 11: Looks good to me, approved  Already got the green light from Erik ,+1, merged
+  34, 16,1000028, Change has been successfully cherry-picked as ec97fc95a0baa7a27a56e2c4ab4e0cb523815a51. ,Merge, merged
+  35, 0,1000003, Patch Set 1: I would prefer that you didnt submit this  Screen looks broken after this change:  http://imageshack.us/content_round.php?page=done&l=img810/9651/qmlprofiler.png&via=mupload&newlp=1 ,-1, merged
+  35, 4,1000015, Uploaded patch set 2. ,Update, merged
+  35, 5,1000049, Patch Set 2: I would prefer that you didnt submit this  - Mixing whitespace-only changes with other changes (key "mixws")    WS-only in src/plugins/qmlprofiler/qmlprofilersummaryview.cpp: 60    WS-only in src/plugins/qmlprofiler/qmlprofilertool.cpp: 189 ,-1, merged
+  35, 6,1000015, Uploaded patch set 3. ,Update, merged
+  35, 7,1000049, Patch Set 3: I would prefer that you didnt submit this  - Mixing whitespace-only changes with other changes    WS-only in src/plugins/qmlprofiler/qmlprofilersummaryview.cpp: 60    WS-only in src/plugins/qmlprofiler/qmlprofilertool.cpp: 189 ,-1, merged
+  35, 8,1000015, Uploaded patch set 4. ,Update, merged
+  35, 9,1000049, Patch Set 4: I would prefer that you didnt submit this  - Mixing whitespace-only changes with other changes    WS-only in src/plugins/qmlprofiler/qmlprofilersummaryview.cpp: 60    WS-only in src/plugins/qmlprofiler/qmlprofilertool.cpp: 189 ,-1, merged
+  35, 11,1000015, Patch Set 4: Looks good to me, approved   ,+1, merged
+  35, 12,1000015, Change has been successfully cherry-picked as cc645911c15e77ca3d290010e58968aa1fb353ca. ,Merge, merged
+  36, 0,1000012, Change has been successfully cherry-picked as 0bf18d008b9af784c2bfe3033c52bcc676be5607. ,Merge, merged
+  37, 0,1000012, Patch Set 1: Looks good to me, but someone else must approve  I removed the AllPropertiesBox from the very old integration. I will continue to clean up DesignDocumentController ,+1, merged
+  37, 1,1000003, Patch Set 1: I would prefer that you didnt submit this  (4 inline comments)  See inline comments. ,-1, merged
+  37, 2,1000012, Uploaded patch set 2. ,Update, merged
+  37, 3,1000012, Uploaded patch set 3. ,Update, merged
+  37, 4,1000003, Change has been successfully cherry-picked as cbc511213bc3ba2fc19b854f505da5d6c2f296ed. ,Merge, merged
+  38, 0,1000018, Uploaded patch set 2. ,Update, merged
+  38, 1,1000029, Patch Set 2: Looks good to me, approved   ,+1, merged
+  38, 2,1000018, Change has been successfully cherry-picked as f027b1da87afe3696ef4fc93bd36c08e1f72daa7. ,Merge, merged
+  39, 0,1000009, Change has been successfully cherry-picked as 2d80383db12ac229949c0bd4e50c1613137e2d64. ,Merge, merged
+  40, 0,1000009, Patch Set 1: Looks good to me, approved   ,+1, merged
+  40, 1,1000009, Change has been successfully cherry-picked as 56a73b29215b3b95af4a87d58e3f0b0c9854297e. ,Merge, merged
+  41, 0,1000007, Patch Set 1: Looks good to me, approved   ,+1, merged
+  41, 1,1000007, Change has been successfully cherry-picked as ec8adef4a2aebed533483cb63848ab419a0ebb4e. ,Merge, merged
+  42, 0,1000007, Patch Set 1: Looks good to me, approved   ,+1, merged
+  42, 1,1000007, Change has been successfully cherry-picked as b25373b304b1356787f676ed33dcca6eb04fab28. ,Merge, merged
+  43, 0,1000007, Patch Set 1: Looks good to me, approved   ,+1, merged
+  43, 1,1000007, Change has been successfully cherry-picked as a923cee383e28dbeeb24c97dbba3b756f6a85d82. ,Merge, merged
+  44, 0,1000029, Patch Set 1: Looks good to me, approved   ,+1, merged
+  44, 1,1000020, Change has been successfully cherry-picked as 9e6f387bce3581890bf2fd1600a3c93a855e2b01. ,Merge, merged
+  45, 0,1000029, Patch Set 1: Looks good to me, approved   ,+1, merged
+  45, 1,1000020, Change has been successfully cherry-picked as 99fee33fd1a5e82b7be3d17a74229efaaf7571ef. ,Merge, merged
+  46, 0,1000029, Patch Set 1: Looks good to me, approved   ,+1, merged
+  46, 1,1000020, Change has been successfully cherry-picked as 1c60ae10399d3e194b6b0a30abd12c96279fbce3. ,Merge, merged
+  47, 0,1000029, Patch Set 1: Looks good to me, approved   ,+1, merged
+  47, 1,1000020, Change has been successfully cherry-picked as 1b374905f922d713084c15e7ae893e8a5c3cb947. ,Merge, merged
+  48, 0,1000029, Patch Set 1: Looks good to me, approved   ,+1, merged
+  48, 1,1000029, Patch Set 1: No score  (1 inline comment)   ,-1, merged
+  48, 2,1000020, Uploaded patch set 2. ,Update, merged
+  48, 3,1000020, Uploaded patch set 3. ,Update, merged
+  48, 4,1000029, Patch Set 3: Looks good to me, approved   ,+1, merged
+  48, 5,1000020, Change has been successfully cherry-picked as 0350314b2241f03270c67e743dac218da7874aa8. ,Merge, merged
+  49, 0,1000009, Patch Set 1: Looks good to me, approved   ,+1, merged
+  49, 1,1000009, Change has been successfully cherry-picked as 4773cdf7c07b378af2cb0c1447734d58870e3075. ,Merge, merged
+  50, 1,1000049, Patch Set 1: Looks good to me, but someone else must approve   ,+1, abandoned
+  51, 0,1000018, Change has been successfully cherry-picked as a3c9cb995d341d08519a4787f53ff95acca93b29. ,Merge, merged
+  52, 0,1000026, Patch Set 1: I would prefer that you didnt submit this  (16 inline comments)  Can you fix the issues first? ,-1, merged
+  52, 1,1000018, Uploaded patch set 2. ,Update, merged
+  52, 2,1000049, Patch Set 2: Looks good to me, but someone else must approve   ,+1, merged
+  52, 3,1000026, Patch Set 2: Looks good to me, approved   ,+1, merged
+  52, 4,1000018, Change has been successfully cherry-picked as 4dcb417c3298c1f3bedd6dc9588cf2af2561909e. ,Merge, merged
+  53, 0,1000020, Patch Set 1: Looks good to me, approved   ,+1, merged
+  53, 1,1000020, Change has been successfully cherry-picked as 9f5473e76957681c191ad96d8a7cc9187019eada. ,Merge, merged
+  54, 0,1000049, Patch Set 1: Looks good to me, but someone else must approve   ,+1, merged
+  54, 1,1000049, Patch Set 1: I would prefer that you didnt submit this  - Mixing whitespace-only changes with other changes (key "mixws")    WS-only in src/libs/qmljsdebugclient/qpacketprotocol.cpp: 103, 106, 143, 157, 159, 161, 170, 186, 246, 273, 308, 406, 481    WS-only in src/libs/qmljsdebugclient/qpacketprotocol_p.h: 52, 55, 69, 77, 93, 95, 106    WS-only in src/plugins/qmlprofiler/qmlprofilersummaryview.cpp: 81, 83, 126, 231, 263, 265    WS-only in src/plugins/qmlprofiler/qmlprofilertool.cpp: 106, 255    WS-only in src/plugins/qmlprofiler/qmlprojectanalyzerruncontrolfactory.cpp: 106 ,-1, merged
+  54, 2,1000015, Uploaded patch set 2. ,Update, merged
+  54, 3,1000049, Patch Set 2: I would prefer that you didnt submit this  - Mixing whitespace-only changes with other changes    WS-only in src/libs/qmljsdebugclient/qpacketprotocol.cpp: 103, 106, 143, 157, 159, 161, 170, 186, 246, 273, 308, 406, 481    WS-only in src/libs/qmljsdebugclient/qpacketprotocol_p.h: 52, 55, 69, 77, 93, 95, 106    WS-only in src/plugins/qmlprofiler/qmlprofilersummaryview.cpp: 81, 83, 126, 231, 263, 265    WS-only in src/plugins/qmlprofiler/qmlprofilertool.cpp: 106, 255    WS-only in src/plugins/qmlprofiler/qmlprojectanalyzerruncontrolfactory.cpp: 106 ,-1, merged
+  54, 5,1000030, Patch Set 2: Looks good to me, approved   ,+1, merged
+  54, 6,1000015, Uploaded patch set 3. ,Update, merged
+  54, 7,1000049, Patch Set 3: I would prefer that you didnt submit this  - Mixing whitespace-only changes with other changes    WS-only in src/libs/qmljsdebugclient/qpacketprotocol.cpp: 103, 106, 143, 157, 159, 161, 170, 186, 246, 273, 308, 406, 481    WS-only in src/libs/qmljsdebugclient/qpacketprotocol_p.h: 52, 55, 69, 77, 93, 95, 106    WS-only in src/plugins/qmlprofiler/qmlprofilersummaryview.cpp: 81, 83, 126, 231, 263, 265    WS-only in src/plugins/qmlprofiler/qmlprofilertool.cpp: 106, 255    WS-only in src/plugins/qmlprofiler/qmlprojectanalyzerruncontrolfactory.cpp: 106 ,-1, merged
+  54, 8,1000015, Patch Set 3: Looks good to me, approved   ,+1, merged
+  54, 9,1000015, Change has been successfully cherry-picked as f7fee744b9287247348e58ea02966eac66b8fdf8. ,Merge, merged
+  55, 0,1000049, Patch Set 1: Looks good to me, but someone else must approve   ,+1, merged
+  55, 1,1000049, Patch Set 1: Looks good to me, but someone else must approve   ,+1, merged
+  55, 2,1000015, Uploaded patch set 2. ,Update, merged
+  55, 3,1000049, Patch Set 2: Looks good to me, but someone else must approve   ,+1, merged
+  55, 4,1000015, Uploaded patch set 3. ,Update, merged
+  55, 5,1000049, Patch Set 3: Looks good to me, but someone else must approve   ,+1, merged
+  55, 6,1000015, Patch Set 3: Looks good to me, approved   ,+1, merged
+  55, 7,1000015, Change has been successfully cherry-picked as 5f1ce56ac66f24e7f2849a69d4dcb089477cb1a5. ,Merge, merged
+  56, 0,1000049, Patch Set 1: Looks good to me, but someone else must approve   ,+1, merged
+  56, 1,1000049, Patch Set 1: Looks good to me, but someone else must approve   ,+1, merged
+  56, 2,1000015, Uploaded patch set 2. ,Update, merged
+  56, 3,1000049, Patch Set 2: Looks good to me, but someone else must approve   ,+1, merged
+  56, 4,1000015, Uploaded patch set 3. ,Update, merged
+  56, 5,1000049, Patch Set 3: Looks good to me, but someone else must approve   ,+1, merged
+  56, 6,1000015, Change has been successfully cherry-picked as 39b71920b34f0d15afc3f661097a648ac01f882a. ,Merge, merged
+  57, 0,1000049, Patch Set 1: Looks good to me, but someone else must approve   ,+1, merged
+  57, 1,1000049, Patch Set 1: Looks good to me, but someone else must approve   ,+1, merged
+  57, 2,1000015, Uploaded patch set 2. ,Update, merged
+  57, 3,1000049, Patch Set 2: Looks good to me, but someone else must approve   ,+1, merged
+  57, 4,1000015, Uploaded patch set 3. ,Update, merged
+  57, 5,1000049, Patch Set 3: Looks good to me, but someone else must approve   ,+1, merged
+  57, 6,1000015, Change has been successfully cherry-picked as 251bff8a9c0e12feb28ba57ff60cf989fc4cb381. ,Merge, merged
+  58, 0,1000049, Patch Set 1: Looks good to me, but someone else must approve   ,+1, merged
+  58, 1,1000015, Uploaded patch set 2. ,Update, merged
+  58, 2,1000049, Patch Set 2: Looks good to me, but someone else must approve   ,+1, merged
+  58, 3,1000015, Uploaded patch set 3. ,Update, merged
+  58, 4,1000049, Patch Set 3: Looks good to me, but someone else must approve   ,+1, merged
+  58, 5,1000015, Patch Set 3: Looks good to me, approved   ,+1, merged
+  58, 6,1000015, Change has been successfully cherry-picked as b7d71b07696df3a5d29e6c620a1aec858285e78c. ,Merge, merged
+  59, 0,1000049, Patch Set 1: Looks good to me, but someone else must approve   ,+1, merged
+  59, 1,1000015, Uploaded patch set 2. ,Update, merged
+  59, 2,1000049, Patch Set 2: Looks good to me, but someone else must approve   ,+1, merged
+  59, 3,1000030, Patch Set 2: Looks good to me, approved   ,+1, merged
+  59, 4,1000015, Uploaded patch set 3. ,Update, merged
+  59, 5,1000049, Patch Set 3: Looks good to me, but someone else must approve   ,+1, merged
+  59, 6,1000015, Patch Set 3: Looks good to me, approved   ,+1, merged
+  59, 8,1000015, Change has been successfully cherry-picked as 10317564f19832903eee794043078f6de7d18d94. ,Merge, merged
+  60, 0,1000007, Patch Set 1: Looks good to me, approved   ,+1, merged
+  60, 1,1000007, Change has been successfully cherry-picked as 1ce9e72dc106ea048d4af3e2c2de0a033826790d. ,Merge, merged
+  61, 0,1000007, Patch Set 1: Looks good to me, approved   ,+1, merged
+  61, 1,1000007, Change has been successfully cherry-picked as e5a42e2dc090247ca775006692eb24a5b52e725f. ,Merge, merged
+  62, 0,1000049, Patch Set 1: I would prefer that you didnt submit this  src/shared/proparser/proparser.pri:    - Style issues (key "style")      13: Trailing whitespace ,-1, merged
+  62, 1,1000007, Uploaded patch set 2. ,Update, merged
+  62, 2,1000049, Patch Set 2: Looks good to me, but someone else must approve   ,+1, merged
+  62, 3,1000004, Patch Set 2: Looks good to me, approved   ,+1, merged
+  62, 4,1000007, Change has been successfully cherry-picked as f69eb52944a7fc8306cbb72b7325a610045dea7a. ,Merge, merged
+  63, 0,1000049, Patch Set 1: Looks good to me, but someone else must approve   ,+1, merged
+  63, 1,1000009, Patch Set 1: Looks good to me, approved  Comment addition only, so it should be save;-) ,+1, merged
+  63, 2,1000009, Change has been successfully cherry-picked as 566ae4cc466752382a62bc7a8f73d07808694ed2. ,Merge, merged
+  64, 0,1000049, Patch Set 1: I would prefer that you didnt submit this  - Hint: Aim for shorter log message summaries ,-1, merged
+  64, 1,1000006, Patch Set 1: Looks good to me, approved  The bot is overly paranoid :-) ,+1, merged
+  64, 2,1000006, Change has been successfully cherry-picked as ea9b7fb5e557bb59fa9ece01e87d33106e763fc0. ,Merge, merged
+  65, 0,1000049, Patch Set 1: Looks good to me, but someone else must approve   ,+1, abandoned
+  65, 1,1000007, Patch Set 1: Do not submit  First iteration, not yet meant to be pushed ,-1, abandoned
+  65, 2,1000004, Patch Set 1: Do not submit  why do you play games with the exports on the command line instead of using UTILS_EXPORT?  you did not adjust tests/manual/proparser, tests/auto/ioutils and tests/auto/profilewriter ,-1, abandoned
+  65, 3,1000007, Uploaded patch set 2. ,Update, abandoned
+  65, 4,1000049, Patch Set 2: Looks good to me, but someone else must approve   ,+1, abandoned
+  65, 6,1000007, Patch Set 2: No score  Plugins implementing their own qt versions need to have these classes exported. ,-1, abandoned
+  66, 0,1000049, Patch Set 1: Looks good to me, but someone else must approve   ,+1, merged
+  66, 1,1000014, Change has been successfully cherry-picked as 8bb99e4c75694ce29f912c6c2d62e8fdc577c920. ,Merge, merged
+  67, 0,1000049, Patch Set 1: Looks good to me, but someone else must approve   ,+1, merged
+  67, 1,1000024, Change has been successfully cherry-picked as 2a7218591c1c5a6db5cc9a133240de2952be087c. ,Merge, merged
+  68, 0,1000049, Patch Set 1: Looks good to me, but someone else must approve   ,+1, merged
+  68, 1,1000015, Patch Set 1: Looks good to me, approved   ,+1, merged
+  68, 2,1000015, Change has been successfully cherry-picked as 246a578a59aa3452a4613523aeb873daaf5e5676. ,Merge, merged
+  69, 0,1000049, Patch Set 1: Looks good to me, but someone else must approve   ,+1, merged
+  69, 1,1000030, Change has been successfully cherry-picked as 98c412f866b894a58342cd77bfb984a63e9493e6. ,Merge, merged
+  70, 0,1000049, Patch Set 1: Looks good to me, but someone else must approve   ,+1, merged
+  70, 1,1000007, Patch Set 1: Looks good to me, approved   ,+1, merged
+  70, 2,1000003, Patch Set 1: Looks good to me, but someone else must approve  Looked into the QmlProject parts ... It breaks qmldump where your run configuration isnt a QmlProject one, but the old logic (just find any Qt with qmldump) was dubious at best anyway. ,+1, merged
+  70, 3,1000004, Patch Set 1: Looks good to me, but someone else must approve  (8 inline comments)  technically, the restoreFromLegacyConfig and toolForFoo changes should be separate commits, afaict. alternatively, the commit message should elaborate on them at least.  as noted in change 65, i think the move of the proparser to utils makes no sense in the face of this change - you can export it from qtsupport just as well, and it fits better here. ,+1, merged
+  70, 4,1000007, Uploaded patch set 2. ,Update, merged
+  70, 5,1000049, Patch Set 2: Looks good to me, but someone else must approve   ,+1, merged
+  70, 6,1000007, Uploaded patch set 3. ,Update, merged
+  70, 7,1000049, Patch Set 3: Looks good to me, but someone else must approve   ,+1, merged
+  70, 8,1000004, Patch Set 3: Do not submit  you forgot to add proparser_global.h. the path adjustments in the tests are wrong. ,-1, merged
+  70, 9,1000007, Uploaded patch set 4. ,Update, merged
+  70, 10,1000009, Patch Set 4: Looks good to me, but someone else must approve  (3 inline comments)   ,+1, merged
+  70, 11,1000007, Uploaded patch set 5. ,Update, merged
+  70, 12,1000007, Uploaded patch set 6. ,Update, merged
+  70, 13,1000004, Patch Set 6: Looks good to me, but someone else must approve  (1 inline comment)   ,+1, merged
+  70, 14,1000049, Patch Set 6: Looks good to me, but someone else must approve   ,+1, merged
+  70, 15,1000007, Patch Set 6: Looks good to me, approved   ,+1, merged
+  70, 17,1000007, Uploaded patch set 7. ,Update, merged
+  70, 18,1000049, Patch Set 7: Looks good to me, but someone else must approve   ,+1, merged
+  70, 19,1000007, Patch Set 7: Looks good to me, approved   ,+1, merged
+  70, 20,1000007, Change has been successfully cherry-picked as 754be1bcfcd22e41f591ae78642605f639b075b1. ,Merge, merged
+  71, 0,1000049, Patch Set 1: Looks good to me, but someone else must approve   ,+1, merged
+  71, 1,1000020, Change has been successfully cherry-picked as 10dd9c9a8c58c3a82ad90165ae9d25ef3f7da0b5. ,Merge, merged
+  72, 0,1000049, Patch Set 1: Looks good to me, but someone else must approve   ,+1, merged
+  72, 1,1000010, Patch Set 1: Looks good to me, approved   ,+1, merged
+  72, 2,1000010, Change has been successfully cherry-picked as 2b2b5aec23482735fa6876144fd458afae1bdd03. ,Merge, merged
+  73, 0,1000049, Patch Set 1: Looks good to me, but someone else must approve   ,+1, merged
+  73, 1,1000015, Patch Set 1: Looks good to me, approved   ,+1, merged
+  73, 2,1000015, Change has been successfully cherry-picked as 46a707fd8d64d5b8fc5dd13dfe349fd06fe9432c. ,Merge, merged
+  74, 0,1000018, Patch Set 1: Do not submit   ,-1, merged
+  74, 1,1000029, Patch Set 1: Looks good to me, approved   ,+1, merged
+  74, 2,1000020, Patch Set 1: Looks good to me, but someone else must approve  This feature is of great value. My initial comments concern usability in general.  The code style widget looks great and intuitive. But I think the tab settings concept is now a bit confusing due to the many fallbacks (global editor, project editor, global C++, project C++) available. I was wondering how much of those Tabs and Indentation settings are really used by other language editors...?  The point is that maybe we should keep only the tab-size and replace for space options as part of the text editor. After all, indentation and related are really language specific and could be handle in the specific language options (C++, QML, etc). This could help making things clearer (in fact, we have a similar situation for completion).  Now, since we have a lot of settings, I believe we should have a way of identifying configurations, importing/exporting, or at least resetting to a original state... I could make use of this one right now actually. :-)  Something picky: The combos in the Tabs and Identation section should be in the same line after the colon in my option. ,+1, merged
+  74, 3,1000049, Patch Set 1: I would prefer that you didnt submit this  - Mixing whitespace-only changes with other changes    WS-only in src/plugins/texteditor/tabsettings.cpp: 410 ,-1, merged
+  74, 4,1000018, Uploaded patch set 2. ,Update, merged
+  74, 5,1000049, Patch Set 2: I would prefer that you didnt submit this  - Mixing whitespace-only changes with other changes    WS-only in src/plugins/texteditor/tabsettings.cpp: 410 ,-1, merged
+  74, 6,1000018, Patch Set 2: Looks good to me, approved   ,+1, merged
+  74, 7,1000020, Patch Set 2: Looks good to me, but someone else must approve  My review from that last patch set... ,+1, merged
+  74, 8,1000057, Patch Set 2: Looks good to me, approved   ,+1, merged
+  74, 9,1000029, Patch Set 2: Looks good to me, approved   ,+1, merged
+  74, 10,1000018, Change has been successfully cherry-picked as 779fafcbfe6f92dd1288664fae512f69bc12418b. ,Merge, merged
+  75, 0,1000049, Patch Set 1: I would prefer that you didnt submit this  share/qtcreator/qml/qmljsdebugger/qdeclarativeviewobserver.cpp:    - Style issues      446: Flow control keywords must be followed by a single space ,-1, merged
+  75, 1,1000003, Patch Set 1: I would prefer that you didnt submit this  (5 inline comments)   ,-1, merged
+  75, 2,1000030, Uploaded patch set 2. ,Update, merged
+  75, 3,1000049, Patch Set 2: I would prefer that you didnt submit this  share/qtcreator/qml/qmljsdebugger/qdeclarativeviewobserver.cpp:    - Style issues      446: Flow control keywords must be followed by a single space ,-1, merged
+  75, 4,1000030, Uploaded patch set 3. ,Update, merged
+  75, 5,1000049, Patch Set 3: Looks good to me, but someone else must approve   ,+1, merged
+  75, 6,1000030, Uploaded patch set 4. ,Update, merged
+  75, 7,1000049, Patch Set 4: Looks good to me, but someone else must approve   ,+1, merged
+  75, 8,1000030, Uploaded patch set 5. ,Update, merged
+  75, 9,1000049, Patch Set 5: Looks good to me, but someone else must approve   ,+1, merged
+  75, 10,1000003, Change has been successfully cherry-picked as 3cf5379380e888de8dde18e461a01b1aa653cc93. ,Merge, merged
+  76, 0,1000015, Change has been successfully cherry-picked as 4bd6bb4d55e6ab9bb2389dcbbd5ec6e96d2c0adc. ,Merge, merged
+  77, 0,1000010, Patch Set 1: Looks good to me, approved   ,+1, merged
+  77, 1,1000010, Change has been successfully cherry-picked as d67b7d17dcec2683c10cf3df1b97bfee3d9ab568. ,Merge, merged
+  78, 0,1000009, Patch Set 1: Looks good to me, approved   ,+1, merged
+  78, 1,1000009, Change has been successfully cherry-picked as e7b7b5f2301b0f1ddd42a899a9db892f9721959e. ,Merge, merged
+  79, 0,1000049, Patch Set 1: I would prefer that you didnt submit this  - Mixing whitespace-only changes with other changes    WS-only in src/plugins/qt4projectmanager/qt-s60/s60publisherovi.cpp: 401 ,-1, merged
+  79, 1,1000007, Patch Set 1: Looks good to me, approved  (1 inline comment)   ,+1, merged
+  79, 2,1000028, Uploaded patch set 2. ,Update, merged
+  79, 3,1000028, Patch Set 2: Looks good to me, approved   ,+1, merged
+  79, 4,1000028, Change has been successfully cherry-picked as 9112a090adb20786274868d362c7f9a3cc0a6d7e. ,Merge, merged
+  80, 0,1000049, Patch Set 1: Looks good to me, but someone else must approve   ,+1, merged
+  80, 1,1000007, Patch Set 1: Looks good to me, approved   ,+1, merged
+  80, 5,1000028, Uploaded patch set 2. ,Update, merged
+  80, 6,1000028, Patch Set 2: Looks good to me, approved   ,+1, merged
+  80, 7,1000028, Change has been successfully cherry-picked as f3faa59f1dbae64ffe4b68e5a95aa852167bda7c. ,Merge, merged
+  81, 0,1000049, Patch Set 1: Looks good to me, but someone else must approve   ,+1, merged
+  81, 1,1000028, Patch Set 1: Looks good to me, approved   ,+1, merged
+  81, 2,1000028, Change has been successfully cherry-picked as 7f9d75c2bb91fe732cc674e34418a4a06c23a6e3. ,Merge, merged
+  82, 0,1000049, Patch Set 1: Looks good to me, but someone else must approve   ,+1, merged
+  82, 1,1000015, Uploaded patch set 2. ,Update, merged
+  82, 2,1000015, Change has been successfully cherry-picked as f9f37e689e0e1c6036fc8518e41109b041a66c33. ,Merge, merged
+  83, 0,1000049, Patch Set 1: Looks good to me, but someone else must approve   ,+1, merged
+  83, 1,1000015, Uploaded patch set 2. ,Update, merged
+  83, 2,1000015, Patch Set 2: Looks good to me, approved   ,+1, merged
+  83, 3,1000015, Change has been successfully cherry-picked as d21645cc0d9de72dd80d5ef257ee064dc42f79ef. ,Merge, merged
+  84, 0,1000049, Patch Set 1: I would prefer that you didnt submit this  - Mixing whitespace-only changes with other changes    WS-only in src/libs/utils/environment.cpp: 460    WS-only in src/libs/utils/environment.h: 78, 102, 113 ,-1, merged
+  84, 1,1000015, Uploaded patch set 2. ,Update, merged
+  84, 2,1000015, Change has been successfully cherry-picked as c6f04ddf7913c3839fa267a7dbf2f7948ab118de. ,Merge, merged
+  85, 0,1000049, Patch Set 1: Looks good to me, but someone else must approve   ,+1, merged
+  85, 1,1000015, Uploaded patch set 2. ,Update, merged
+  85, 2,1000015, Patch Set 2: Looks good to me, approved   ,+1, merged
+  85, 3,1000015, Change has been successfully cherry-picked as 9d5a094cdfabc13dcd8d7a121104fa03ddb74e99. ,Merge, merged
+  86, 0,1000049, Patch Set 1: Looks good to me, but someone else must approve   ,+1, merged
+  86, 1,1000009, Patch Set 1: I would prefer that you didnt submit this  (1 inline comment)  ... due to possible 0-pointer dereference. ,-1, merged
+  86, 2,1000003, Uploaded patch set 2. ,Update, merged
+  86, 3,1000049, Patch Set 2: Looks good to me, but someone else must approve   ,+1, merged
+  86, 4,1000009, Patch Set 2: Looks good to me, approved   ,+1, merged
+  86, 6,1000007, Patch Set 2: Looks good to me, approved   ,+1, merged
+  86, 7,1000003, Uploaded patch set 3. ,Update, merged
+  87, 0,1000049, Patch Set 1: Looks good to me, but someone else must approve   ,+1, merged
+  87, 1,1000015, Patch Set 1: Looks good to me, approved  The direction is ok, but there is   qmljscodestylesettingspage.cpp:30: error: expected type-specifier before ‘::’ token  too ,+1, merged
+  87, 2,1000015, Change has been successfully cherry-picked as 312f6d0ff1703046be3a774855e91637567ef1be. ,Merge, merged
+  88, 0,1000049, Patch Set 1: Looks good to me, but someone else must approve   ,+1, merged
+  88, 1,1000003, Change has been successfully cherry-picked as 97ca81fc6dfe0247d58a97e24a19b44fbe8f6ad0. ,Merge, merged
+  89, 0,1000049, Patch Set 1: Looks good to me, but someone else must approve   ,+1, merged
+  89, 1,1000003, Patch Set 1: Looks good to me, approved  (1 inline comment)   ,+1, merged
+  89, 2,1000003, Change has been successfully cherry-picked as 554b8e996bfa95f0e08dfe4ef94da3ced5e09925. ,Merge, merged
+  90, 0,1000049, Patch Set 1: Looks good to me, but someone else must approve   ,+1, abandoned
+  90, 1,1000018, Patch Set 1: I would prefer that you didnt submit this  Itd be nicer to change the namespace in the .ui file to be QmlJSTools::Internal, same as the CppCodeStyleSettingsPage change ( http://codereview.qt.nokia.com/87 ) ,-1, abandoned
+  91, 0,1000009, Patch Set 1: Looks good to me, but someone else must approve   ,+1, merged
+  91, 1,1000004, Patch Set 1: Looks good to me, but someone else must approve   ,+1, merged
+  91, 2,1000049, Patch Set 1: Looks good to me, but someone else must approve   ,+1, merged
+  91, 3,1000007, Patch Set 1: Looks good to me, approved   ,+1, merged
+  91, 5,1000007, Uploaded patch set 2. ,Update, merged
+  91, 6,1000049, Patch Set 2: Looks good to me, but someone else must approve   ,+1, merged
+  91, 7,1000007, Patch Set 2: Looks good to me, approved   ,+1, merged
+  91, 9,1000007, Uploaded patch set 3. ,Update, merged
+  91, 10,1000049, Patch Set 3: Looks good to me, but someone else must approve   ,+1, merged
+  91, 11,1000007, Patch Set 3: Looks good to me, approved   ,+1, merged
+  91, 12,1000007, Change has been successfully cherry-picked as e3842f9973b632e9f0ca29b464946f47c85bf82a. ,Merge, merged
+  92, 2,1000028, Uploaded patch set 2. ,Update, merged
+  92, 3,1000049, Patch Set 2: I would prefer that you didnt submit this  - Mixing whitespace-only changes with other changes    WS-only in src/plugins/qt4projectmanager/qt-s60/s60publisherovi.cpp: 303, 426 ,-1, merged
+  92, 4,1000028, Uploaded patch set 3. ,Update, merged
+  92, 5,1000049, Patch Set 3: Looks good to me, but someone else must approve   ,+1, merged
+  92, 6,1000028, Uploaded patch set 4. ,Update, merged
+  92, 7,1000049, Patch Set 4: Looks good to me, but someone else must approve   ,+1, merged
+  92, 9,1000028, Uploaded patch set 5. ,Update, merged
+  92, 10,1000028, Uploaded patch set 6. ,Update, merged
+  92, 11,1000028, Uploaded patch set 7. ,Update, merged
+  92, 12,1000007, Patch Set 7: Looks good to me, approved   ,+1, merged
+  92, 13,1000007, Change has been successfully cherry-picked as 16eefb3a882a85d866260e46bba9d87252f922d0. ,Merge, merged
+  93, 0,1000015, Patch Set 1: Looks good to me, approved   ,+1, merged
+  93, 1,1000015, Change has been successfully cherry-picked as 710b3603843c921110fd376be698665e66a5b413. ,Merge, merged
+  94, 0,1000012, Change has been successfully cherry-picked as 3d417ed60591f73f88cf2dee3472e4e32b9fc41f. ,Merge, merged
+  95, 0,1000061, Change has been successfully cherry-picked as dcd34febabccdcb96fc7963172cba270e20aa483. ,Merge, merged
+  96, 0,1000012, Uploaded patch set 2. ,Update, merged
+  96, 1,1000049, Patch Set 2: I would prefer that you didnt submit this  src/plugins/qmldesigner/components/integration/componentview.cpp:    - Style issues      171: Flow control keywords must be followed by a single space    - Mixing whitespace-only changes with other changes    WS-only in src/plugins/qmldesigner/components/integration/componentview.cpp: 153, 157 ,-1, merged
+  96, 2,1000012, Uploaded patch set 3. ,Update, merged
+  96, 3,1000049, Patch Set 3: I would prefer that you didnt submit this  - Mixing whitespace-only changes with other changes    WS-only in src/plugins/qmldesigner/components/integration/componentview.cpp: 153, 157 ,-1, merged
+  96, 4,1000061, Change has been successfully cherry-picked as f950b8d7c7812c7a5916676fbd5f9c2edf61118f. ,Merge, merged
+  97, 0,1000049, Patch Set 1: Looks good to me, but someone else must approve   ,+1, merged
+  97, 1,1000014, Patch Set 1: Looks good to me, approved  I cannot really test this, closest I get is running MinGW32 on Vista64 and that results in:  0 ntdll!RtlDosPathNameToRelativeNtPathName_U_WithStatus	C: Windows system32 ntdll.dll 0 0x77870005	 1 ntdll!LdrInitializeThunk C: Windows system32 ntdll.dll 0x778cd990 2 ?? 0 0x623d0c90  that is, despite being a 32bit process, it reports a stop in the WOW32 emulation, so, the patch does not have any effect/is not required. A test on Windows32 should give meaningful results. ,+1, merged
+  97, 3,1000015, Uploaded patch set 2. ,Update, merged
+  97, 4,1000015, Uploaded patch set 3. ,Update, merged
+  97, 5,1000014, Patch Set 3: Looks good to me, approved  As before, cannot really test it. ,+1, merged
+  97, 6,1000015, Uploaded patch set 4. ,Update, merged
+  97, 7,1000015, Change has been successfully cherry-picked as 184b079557025159930b9fdc9db7f5f561501221. ,Merge, merged
+  98, 0,1000049, Patch Set 1: Looks good to me, but someone else must approve   ,+1, merged
+  98, 1,1000009, Patch Set 1: Looks good to me, but someone else must approve  (1 inline comment)  Id approve this if there was no assignment in the condition of the if statement:-) ,+1, merged
+  98, 2,1000014, Patch Set 1: Looks good to me, approved   ,+1, merged
+  98, 3,1000014, Change has been successfully cherry-picked as b8734dd7278cf9d69eef4b84efabf98eb45df97e. ,Merge, merged
+  99, 0,1000049, Patch Set 1: Looks good to me, but someone else must approve   ,+1, merged
+  99, 1,1000018, Patch Set 1: Looks good to me, approved   ,+1, merged
+  99, 2,1000018, Change has been successfully cherry-picked as 934a8238d4937f5bcf1dd22692c07d455af34506. ,Merge, merged

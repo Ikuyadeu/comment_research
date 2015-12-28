@@ -24,7 +24,7 @@ csr = cnct.cursor()
 # @VotingScore: the score that a reviewer voted. (+1 or -1)
 print "ReviewId,Status" # print clumn name
 
-for Id in range(1, 10):
+for Id in range(1, 100):
 	sql = "SELECT ReviewId, Status \
 	FROM Review \
 	WHERE ReviewId = '"+str(Id)+"' \
