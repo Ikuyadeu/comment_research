@@ -49,7 +49,8 @@ StartId = int(ReviewNum * 0.1)
 ### Main
 # @ScoreOfReliability: the sum of all reviewers' reliability in each patch
 # @VotingScore: the score that a reviewer voted. (+1 or -1)
-print "ReviewId, ReviewersNum, AveReliability, MimReliability, Status, PatchType" # print clumn name
+#print "ReviewId, ReviewersNum, AveReliability, MimReliability, Status, PatchType" # print clumn name
+print "ReviewId, ReviewerId ,CommentNum, cur, incur, currentPar" # print clumn name
 
 for Id in range(1, ReviewNum):
 	sql = "SELECT ReviewId, Status \
@@ -122,6 +123,8 @@ for Id in range(1, ReviewNum):
 			if currentPar < mimScore:
 				mimScore = currentPar
 			score = score + currentPar
+			if (CurrentDB=="qt" and (Id==8141 or Id==1048 or Id==7375 or Id==28257)) or (CurrentDB=="Openstack" and (Id==10363 or Id == 10305)):
+				print "%4d, %d, %d, %d, %d, %2f" % (Id, r ,CommentNum, reviewer.cur, reviewer.incur, currentPar)
 		if IsConsensus:
 			if (beforeVote == 1 and status == "merged") or (beforeVote == -1 and status == "abandoned"):
 				PatchType = "AllCorrect"
@@ -131,8 +134,8 @@ for Id in range(1, ReviewNum):
 			PatchType = "NotConsensus"
 
 		scoreAve = float(score) / CommentNum
-		if Id > StartId:
-			print "%4d, %d, %2f, %2f, %s, %s" % (Id, CommentNum, scoreAve, mimScore, status, PatchType)
+		#if Id > StartId:
+			#print "%4d, %d, %2f, %2f, %s, %s" % (Id, CommentNum, scoreAve, mimScore, status, PatchType)
 
 	# collect all vote in comments
 	for comment in comments:
