@@ -7,4 +7,5 @@
 #python GetReviewersReliability.py Openstack 2 > CSVdata_oss/numOfPatchsets_os_2.csv
 #python GetReviewersReliability.py Openstack 3 > CSVdata_oss/numOfPatchsets_os_3.csv
 #python GetReviewersReliability.py Openstack 1 > CSVdata_oss/RQ2_OpenStack_2.csv
-python GetReviewersReliability.py qt 1 > CSVdata_oss/RQ2_Qt_2.csv
+python GetReviewersReliability3.py qt > CSVdata_journal/Qt.csv
+python GetReviewersReliability3.py Openstack > CSVdata_journal/Openstack.csv
