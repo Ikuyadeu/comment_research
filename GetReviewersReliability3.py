@@ -1,10 +1,7 @@
 ##################
 # Author:Ueda Yuki
-# CreatedOn: 2015/10/14
 # Summary: This program is to count current judge and incurrent judge.
 ##################
-
-#comment is not correct
 
 ### Import lib
 import sys
@@ -20,15 +17,10 @@ reviewer = []
 # set original ReviewNum
 argv = sys.argv
 argc = len(argv)
-
-# if argc == 3:
 if argc == 2:
- 	CurrentDB = argv[1]
-	# ReserchCommentNum = int(argv[2])
- else:
- 	CurrentDB = "qt"
-	# ReserchCommentNum = 3
-
+	CurrentDB = argv[1]
+else:
+	CurrentDB = "qt"
 
 # definition bot's id that must be removed
 if CurrentDB == "qt":
@@ -48,13 +40,10 @@ sql = "SELECT COUNT(*) FROM Review;"
 csr.execute(sql)
 ReviewNum = csr.fetchall()[0][0] # 70705 <= Number Of Qt project's patchsets
 
-# StartId = int(ReviewNum * 0.1)
-
 ### Main
 # @ScoreOfReliability: the sum of all reviewers' reliability in each patch
 # @VotingScore: the score that a reviewer voted. (+1 or -1)
-#print "ReviewId, ReviewersNum, AveReliability, MimReliability, Status, PatchType" # print clumn name
-print "ReviewId, ReviewerId ,CommentNum, cur, incur, currentPar" # print clumn name
+print "ReviewId, Reviewerid, CommentIndex, NumOfCurrent, NumOfincurrent, CurrentPar, IncurrentPar, ScoreOfReliability, VotingScore, Status" # print clumn name
 
 for Id in range(1, ReviewNum):
 	sql = "SELECT ReviewId, Status \
@@ -72,8 +61,8 @@ for Id in range(1, ReviewNum):
 	csr.execute(sql)
 	comments = csr.fetchall()
 
-	reviewers = {}
-	reviewers_List = []
+	reviewers_written = []	# Reviewer which has already written a comment in the patch
+	reviewers_List = [] 	# Reviewer which wrote comments in the patch Set (patch not equal patch Set)
 	reviewers_first_score = []
 	reviewers_score = []
 
@@ -82,10 +71,10 @@ for Id in range(1, ReviewNum):
 	for information in info:
 		status = information[1]
 
-	### Analysis (If CommentNum equals only ReserchCommentNum, the following code works)
+	### Analysis
 	CommentNum = 0
 	for comment in comments:
-		reviewer = int(comment[1])
+		reviewer = comment[1]
 		message = comment[2]
 
 		judge = ReviewerFunctions.JudgeDicisionMaking(message)
@@ -100,46 +89,30 @@ for Id in range(1, ReviewNum):
 		# get vote message and reviewer's Id
 		s = ReviewerFunctions.JudgeVoteScore(message)
 		if s != 0:	# remove update comment and not votecomment
-			reviewers[reviewer] = s
+			if reviewer not in reviewers_written:
+				reviewers_written.append(reviewer)
+				reviewers_first_score.append(s)
+				CommentNum += 1
 
-		CommentNum = len(reviewers)
+
+	assert CommentNum == len(reviewers_written)
 
 	# output information of firstVote
-	if CommentNum > 0:
-		score = 0  # @score:ScoreOfReliabilitys
-		mimScore = 1
-		IsConsensus = True
-		beforeVote = 0
-		for r, s in reviewers.items():
-			if beforeVote != 0 and s != beforeVote:
-				IsConsensus = False
-			else:
-				beforeVote = s
+	score = 0  # @score:ScoreOfReliabilitys
+	for index, (r, s) in enumerate(zip(reviewers_written, reviewers_first_score)):
+		if not ReviewerFunctions.IsReviewerClass(r, reviewer_class):
+			ReviewerFunctions.MakeReviewerClass(r, reviewer_class)
 
-			if not ReviewerFunctions.IsReviewerClass(r, reviewer_class):
-				ReviewerFunctions.MakeReviewerClass(r, reviewer_class)
+		reviewer = reviewer_class[r]
 
-			reviewer = reviewer_class[r]
-			if reviewer.cur+reviewer.incur != 0:
-				currentPar = float(reviewer.cur) / (reviewer.cur+reviewer.incur)
-			else:
-				currentPar = 0
-			if currentPar < mimScore:
-				mimScore = currentPar
-			score = score + currentPar
-			if (CurrentDB=="qt" and (Id==8141 or Id==1048 or Id==7375 or Id==28257)) or (CurrentDB=="Openstack" and (Id==10363 or Id == 10305)):
-				print "%4d, %d, %d, %d, %d, %2f" % (Id, r ,CommentNum, reviewer.cur, reviewer.incur, currentPar)
-		if IsConsensus:
-			if (beforeVote == 1 and status == "merged") or (beforeVote == -1 and status == "abandoned"):
-				PatchType = "AllCorrect"
-			else:
-				PatchType = "AllInCorrect"
+		if reviewer.cur+reviewer.incur != 0:
+			currentPar = float(reviewer.cur) / (reviewer.cur+reviewer.incur)
+			incurrentPar = float(reviewer.incur) / (reviewer.cur+reviewer.incur)
 		else:
-			PatchType = "NotConsensus"
-
-		scoreAve = float(score) / CommentNum
-		#if Id > StartId:
-		print "%4d, %d, %2f, %2f, %s, %s" % (Id, CommentNum, scoreAve, mimScore, status, PatchType)
+			currentPar = 0
+			incurrentPar = 0
+		score = score + currentPar
+		print "%4d, %d, %2d, %3d, %3d, %f, %f, %f, %d, %s" % (Id, r, index + 1, reviewer.cur, reviewer.incur, currentPar, incurrentPar, score, s, status)
 
 	# collect all vote in comments
 	for comment in comments:
