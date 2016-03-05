@@ -10,5 +10,5 @@ output <- merge(x = data1, y = data2, by = c("ReviewId", "ReviewerId"), all.x = 
 
 # convert NA to 0
 output$ExpertiseLevel <- ifelse(is.na(output$ExpertiseLevel),0, output$ExpertiseLevel)
-# print(output, sep=",")
+
 write.csv(output, "CSVdata_journal/merged_qt.csv", row.names=FALSE)

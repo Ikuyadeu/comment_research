@@ -9,9 +9,11 @@
 class Reviewer:
     """ reviewer information """
     def __init__(self, rid):
-        self.id = rid;
-        self.cur = 0;
-        self.incur = 0;
+        self.id = rid
+        self.cur = 0
+        self.incur = 0
+        self.case1 = 0
+        self.case2 = 0
         self.p_list = [];
         self.per_former = 0
         self.per_latter = 0
@@ -24,6 +26,13 @@ class Reviewer:
     def addIncur(self):
         self.incur = self.incur + 1;
         self.p_list.append(0); ## 0 means "InCurrent"
+
+    def addCase(self, s):
+        if s > 0:
+            self.case1 += 1
+        else:
+            self.case2 += 1
+        assert self.case1 + self.case2 == self.incur
 
     def SetPerFormer(self, n):
         former_list = self.p_list[0:n];

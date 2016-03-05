@@ -43,7 +43,7 @@ ReviewNum = csr.fetchall()[0][0] # 70705 <= Number Of Qt project's patchsets
 ### Main
 # @ScoreOfReliability: the sum of all reviewers' reliability in each patch
 # @VotingScore: the score that a reviewer voted. (+1 or -1)
-print "ReviewId, ReviewerId, CommentIndex, NumOfCurrent, NumOfincurrent, CurrentPar, IncurrentPar, ScoreOfReliability, VotingScore, Status" # print clumn name
+print "ReviewId, ReviewerId, CommentIndex, NumOfCurrent, NumOfincurrent, CurrentPar, IncurrentPar, ScoreOfReliability, NumOfVotes, Case1, Case2, VotingScore, Status" # print clumn name
 
 for Id in range(1, ReviewNum):
 	sql = "SELECT ReviewId, Status \
@@ -112,7 +112,7 @@ for Id in range(1, ReviewNum):
 			currentPar = 0
 			incurrentPar = 0
 		score = score + currentPar
-		print "%4d, %d, %2d, %3d, %3d, %f, %f, %f, %d, %s" % (Id, r, index + 1, reviewer.cur, reviewer.incur, currentPar, incurrentPar, score, s, status)
+		print "%4d, %d, %2d, %3d, %3d, %f, %f, %f, %d,%d, %d, %d, %s" % (Id, r, index + 1, reviewer.cur, reviewer.incur, currentPar, incurrentPar,score, reviewer.cur + reviewer.incur, reviewer.case1, reviewer.case2, s, status)
 
 	# collect all vote in comments
 	for comment in comments:
@@ -141,6 +141,7 @@ for Id in range(1, ReviewNum):
 					reviewer.addCur()
 				else:
 					reviewer.addIncur()
+					reviewer.addCase(s)
 
 			reviewers_List = []
 			reviewers_score = []
@@ -160,3 +161,4 @@ for Id in range(1, ReviewNum):
 			reviewer.addCur()
 		else:
 			reviewer.addIncur()
+			reviewer.addCase(s)
