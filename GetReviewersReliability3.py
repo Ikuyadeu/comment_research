@@ -112,7 +112,9 @@ for Id in range(1, ReviewNum):
 			currentPar = 0
 			incurrentPar = 0
 		score = score + currentPar
-		print "%4d, %d, %2d, %3d, %3d, %f, %f, %f, %d,%d, %d, %d, %s" % (Id, r, index + 1, reviewer.cur, reviewer.incur, currentPar, incurrentPar,score, reviewer.cur + reviewer.incur, reviewer.case1, reviewer.case2, s, status)
+		voteNum = reviewer.cur + reviewer.incur
+		assert voteNum == reviewer.cur + reviewer.case1 + reviewer.case2
+		print "%4d, %d, %2d, %3d, %3d, %f, %f, %f, %d,%d, %d, %d, %s" % (Id, r, index + 1, reviewer.cur, reviewer.incur, currentPar, incurrentPar,score, voteNum, reviewer.case1, reviewer.case2, s, status)
 
 	# collect all vote in comments
 	for comment in comments:
