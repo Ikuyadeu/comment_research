@@ -18,6 +18,7 @@ class Reviewer:
         self.per_former = 0
         self.per_latter = 0
         self.flag = 0   # It means this whether or not this reviewer is focused on this research. # 1 means "focused"
+        self.incurrent_vote = 0
 
     def addCur(self):
         self.cur = self.cur + 1;
@@ -33,6 +34,7 @@ class Reviewer:
         else:
             self.case2 += 1
         assert self.case1 + self.case2 == self.incur
+        self.incurrent_vote = 1
 
     def SetPerFormer(self, n):
         former_list = self.p_list[0:n];

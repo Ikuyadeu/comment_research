@@ -9,6 +9,7 @@ import MySQLdb
 from collections import defaultdict
 from Util import ReviewerFunctions
 from Class import ReviewerClass
+import copy
 
 ### Init
 reviewer_class = defaultdict(lambda: 0)
@@ -43,7 +44,7 @@ ReviewNum = csr.fetchall()[0][0] # 70705 <= Number Of Qt project's patchsets
 ### Main
 # @ScoreOfReliability: the sum of all reviewers' reliability in each patch
 # @VotingScore: the score that a reviewer voted. (+1 or -1)
-print "ReviewId, ReviewerId, CommentIndex, NumOfCurrent, NumOfincurrent, CurrentPar, IncurrentPar, ScoreOfReliability, NumOfVotes, Case1, Case2, VotingScore, Status" # print clumn name
+print "ReviewId, ReviewerId, CommentIndex, NumOfVotes, NumOfCurrent, NumOfincurrent, CurrentPar, IncurrentPar, ScoreOfReliability,  Case1, Case2, LaterNumOfVotes LatterNumOfCurrent, LatterNumOfincurrent, LatterCurrentPar, LatterIncurrentPar, LatterScoreOfReliability,  LatterCase1, LatterCase2, VotingScore Status, IncurrentVote" # print clumn name
 
 for Id in range(1, ReviewNum):
 	sql = "SELECT ReviewId, Status \
@@ -97,24 +98,16 @@ for Id in range(1, ReviewNum):
 
 	assert CommentNum == len(reviewers_written)
 
-	# output information of firstVote
-	score = 0  # @score:ScoreOfReliabilitys
-	for index, (r, s) in enumerate(zip(reviewers_written, reviewers_first_score)):
+
+
+	# save information of firstVote and reset incurrent_vote
+	for index, (r) in enumerate(reviewers_written):
 		if not ReviewerFunctions.IsReviewerClass(r, reviewer_class):
 			ReviewerFunctions.MakeReviewerClass(r, reviewer_class)
-
 		reviewer = reviewer_class[r]
+		reviewer.incurrent_vote = 0
 
-		if reviewer.cur+reviewer.incur != 0:
-			currentPar = float(reviewer.cur) / (reviewer.cur+reviewer.incur)
-			incurrentPar = float(reviewer.incur) / (reviewer.cur+reviewer.incur)
-		else:
-			currentPar = 0
-			incurrentPar = 0
-		score = score + currentPar
-		voteNum = reviewer.cur + reviewer.incur
-		assert voteNum == reviewer.cur + reviewer.case1 + reviewer.case2
-		print "%4d, %d, %2d, %3d, %3d, %f, %f, %f, %d,%d, %d, %d, %s" % (Id, r, index + 1, reviewer.cur, reviewer.incur, currentPar, incurrentPar,score, voteNum, reviewer.case1, reviewer.case2, s, status)
+	first_reviewer_class = copy.deepcopy(reviewer_class)
 
 	# collect all vote in comments
 	for comment in comments:
@@ -164,3 +157,35 @@ for Id in range(1, ReviewNum):
 		else:
 			reviewer.addIncur()
 			reviewer.addCase(s)
+
+	# output information of firstVote
+	score = 0  # @score:ScoreOfReliabilitys
+	latter_score = 0
+	for index, (r, s) in enumerate(zip(reviewers_written, reviewers_first_score)):
+		if not ReviewerFunctions.IsReviewerClass(r, first_reviewer_class):
+			ReviewerFunctions.MakeReviewerClass(r, first_reviewer_class)
+
+		reviewer = first_reviewer_class[r]
+		latter_reviewer = reviewer_class[r]
+
+		if reviewer.cur+reviewer.incur != 0:
+			currentPar = float(reviewer.cur) / (reviewer.cur+reviewer.incur)
+			incurrentPar = float(reviewer.incur) / (reviewer.cur+reviewer.incur)
+		else:
+			currentPar = 0
+			incurrentPar = 0
+
+		if latter_reviewer.cur+latter_reviewer.incur != 0:
+			latter_currentPar = float(latter_reviewer.cur) / (latter_reviewer.cur+latter_reviewer.incur)
+			latter_incurrentPar = float(latter_reviewer.incur) / (latter_reviewer.cur+latter_reviewer.incur)
+		else:
+			latter_currentPar = 0
+			latter_incurrentPar = 0
+
+		score = score + currentPar
+		latter_score = latter_score + latter_currentPar
+		voteNum = reviewer.cur + reviewer.incur
+		latter_voteNum = latter_reviewer.cur + latter_reviewer.incur
+
+		assert voteNum == reviewer.cur + reviewer.case1 + reviewer.case2
+		print "%4d, %d, %2d, %3d, %3d, %3d, %f, %f, %f, %d,%d, %3d, %3d, %3d, %f, %f, %f, %d,%d, %d, %s, %d" % (Id, r, index + 1, voteNum, reviewer.cur, reviewer.incur, currentPar, incurrentPar,score, reviewer.case1, reviewer.case2, latter_voteNum, latter_reviewer.cur, latter_reviewer.incur, latter_currentPar, latter_incurrentPar,latter_score, latter_reviewer.case1, latter_reviewer.case2, s, status, latter_reviewer.incurrent_vote)
