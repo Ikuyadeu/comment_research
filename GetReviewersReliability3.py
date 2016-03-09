@@ -44,7 +44,7 @@ ReviewNum = csr.fetchall()[0][0] # 70705 <= Number Of Qt project's patchsets
 ### Main
 # @ScoreOfReliability: the sum of all reviewers' reliability in each patch
 # @VotingScore: the score that a reviewer voted. (+1 or -1)
-print "ReviewId, ReviewerId, CommentIndex, NumOfVotes, NumOfCurrent, NumOfincurrent, CurrentPar, IncurrentPar, ScoreOfReliability,  Case1, Case2, LaterNumOfVotes LatterNumOfCurrent, LatterNumOfincurrent, LatterCurrentPar, LatterIncurrentPar, LatterScoreOfReliability,  LatterCase1, LatterCase2, VotingScore Status, IncurrentVote" # print clumn name
+print "ReviewId, ReviewerId, CommentIndex, NumOfVotes, NumOfCurrent, NumOfincurrent, CurrentPar, IncurrentPar, ScoreOfReliability,  Case1, Case2, LaterNumOfVotes, LatterNumOfCurrent, LatterNumOfincurrent, LatterCurrentPar, LatterIncurrentPar, LatterScoreOfReliability,  LatterCase1, LatterCase2, VotingScore, Status, IncurrentVote" # print clumn name
 
 for Id in range(1, ReviewNum):
 	sql = "SELECT ReviewId, Status \
