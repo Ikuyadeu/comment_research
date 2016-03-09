@@ -14,11 +14,21 @@ class Reviewer:
         self.incur = 0
         self.case1 = 0
         self.case2 = 0
+        self.first_cur = 0
+        self.first_incur = 0
+        self.first_case1 = 0
+        self.first_case2 = 0
         self.p_list = [];
         self.per_former = 0
         self.per_latter = 0
         self.flag = 0   # It means this whether or not this reviewer is focused on this research. # 1 means "focused"
         self.incurrent_vote = 0
+
+    def saveFirst(self):
+        self.first_cur = self.cur
+        self.first_incur = self.incur
+        self.first_case1 = self.case1
+        self.first_case2 = self.case2
 
     def addCur(self):
         self.cur = self.cur + 1;
