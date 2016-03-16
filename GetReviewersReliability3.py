@@ -44,7 +44,9 @@ ReviewNum = csr.fetchall()[0][0] # 70705 <= Number Of Qt project's patchsets
 ### Main
 # @ScoreOfReliability: the sum of all reviewers' reliability in each patch
 # @VotingScore: the score that a reviewer voted. (+1 or -1)
-print "ReviewId, ReviewerId, CommentIndex, NumOfVotes, NumOfCurrent, NumOfincurrent, CurrentPar, IncurrentPar, ScoreOfReliability,  Case1, Case2, LaterNumOfVotes, LatterNumOfCurrent, LatterNumOfincurrent, LatterCurrentPar, LatterIncurrentPar, LatterScoreOfReliability,  LatterCase1, LatterCase2, VotingScore, Status, IncurrentVote" # print clumn name
+print "ReviewId, ReviewerId, CommentIndex, NumOfVotes, NumOfCurrent, NumOfincurrent, CurrentPar, IncurrentPar, ScoreOfReliability,  Case1, Case2, \
+LaterNumOfVotes, LatterNumOfCurrent, LatterNumOfincurrent, LatterCurrentPar, LatterIncurrentPar, LatterScoreOfReliability,  LatterCase1, LatterCase2, \
+VotingScore, Status, IncurrentVote" # print clumn name
 
 for Id in range(1, ReviewNum):
 	sql = "SELECT ReviewId, Status \
@@ -170,12 +172,12 @@ for Id in range(1, ReviewNum):
 			currentPar = 0
 			incurrentPar = 0
 
-		if reviewer.cur+reviewer.incur != 0:
-			latter_currentPar = float(reviewer.cur) / (reviewer.cur+reviewer.incur)
-			latter_incurrentPar = float(reviewer.incur) / (reviewer.cur+reviewer.incur)
-		else:
-			latter_currentPar = 0
-			latter_incurrentPar = 0
+		# if reviewer.cur+reviewer.incur != 0:
+		latter_currentPar = float(reviewer.cur) / (reviewer.cur+reviewer.incur)
+		latter_incurrentPar = float(reviewer.incur) / (reviewer.cur+reviewer.incur)
+		# else:
+		# 	latter_currentPar = 0
+		# 	latter_incurrentPar = 0
 
 		score = score + currentPar
 		latter_score = latter_score + latter_currentPar
@@ -183,4 +185,9 @@ for Id in range(1, ReviewNum):
 		latter_voteNum = reviewer.cur + reviewer.incur
 
 		assert voteNum == reviewer.first_cur + reviewer.first_case1 + reviewer.first_case2
-		print "%4d, %d, %2d, %3d, %3d, %3d, %f, %f, %f, %d,%d, %3d, %3d, %3d, %f, %f, %f, %d,%d, %d, %s, %d" % (Id, r, index + 1, voteNum, reviewer.first_cur, reviewer.first_incur, currentPar, incurrentPar,score, reviewer.first_case1, reviewer.first_case2, latter_voteNum, reviewer.cur, reviewer.incur, latter_currentPar, latter_incurrentPar,latter_score, reviewer.case1, reviewer.case2, s, status, reviewer.incurrent_vote)
+		print "%4d, %d, %2d, %3d, %3d, %3d, %f, %f, %f, %d, %d,\
+		 %3d, %3d, %3d, %f, %f, %f, %d,%d, \
+		 %d, %s, %d" % \
+		(Id, r, index + 1, voteNum, reviewer.first_cur, reviewer.first_incur, currentPar, incurrentPar,score, reviewer.first_case1, reviewer.first_case2,\
+		 latter_voteNum, reviewer.cur, reviewer.incur, latter_currentPar, latter_incurrentPar, latter_score, reviewer.case1, reviewer.case2,\
+		 s, status, reviewer.incurrent_vote)

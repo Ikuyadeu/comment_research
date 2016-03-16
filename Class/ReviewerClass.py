@@ -14,6 +14,7 @@ class Reviewer:
         self.incur = 0
         self.case1 = 0
         self.case2 = 0
+        # first~ is reviewer's status before start voting
         self.first_cur = 0
         self.first_incur = 0
         self.first_case1 = 0
@@ -37,6 +38,7 @@ class Reviewer:
     def addIncur(self):
         self.incur = self.incur + 1;
         self.p_list.append(0); ## 0 means "InCurrent"
+        # addCase(self, s)
 
     def addCase(self, s):
         if s > 0:
