@@ -7,7 +7,6 @@ idlist <- read.csv("CSVdata_journal/reviewerList_BasedOn_freqOfReview.csv", sep 
 idlist <- head(idlist, n=nrow(idlist) * 0.05)
 
 reviewers <- data.frame()
-# reviewers <- reviewers1
 for(i in idlist$id){
   reviewers <- rbind(reviewers, subset(reviewers1, reviewers1$ReviewerId == i))
 }

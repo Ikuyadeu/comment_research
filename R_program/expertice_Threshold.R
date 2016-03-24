@@ -13,10 +13,10 @@ while(threshold < 2){
 	negative <- subset(reviewers, reviewers$futureIncurrent == 0)
 
 	# tp is prediction incurrent and real incurrent
-	tp <- nrow(subset(positive, reviewers$IncurrentVote == 1))
-	fp <- nrow(subset(positive, reviewers$IncurrentVote == 0))
-	tn <- nrow(subset(negative, reviewers$IncurrentVote == 1))
-	fn <- nrow(subset(negative, reviewers$IncurrentVote == 0))
+	tp = nrow(subset(positive, positive$IncurrentVote == 1))
+	fp = nrow(subset(positive, positive$IncurrentVote == 0))
+	tn = nrow(subset(negative, negative$IncurrentVote == 1))
+	fn = nrow(subset(negative, negative$IncurrentVote == 0))
 
 	precision <- ifelse(tp+fp==0, 0, tp / (tp + fp))
 	recall <- ifelse(tp+fn==0, 0, tp / (tp + fn))
