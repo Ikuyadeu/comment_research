@@ -1,10 +1,12 @@
 reviewers <- data.frame()
-reviewers <- read.csv("CSVdata_journal/merged_qt2.csv", sep = ",", header = TRUE)
+reviewers <- read.csv("CSVdata_journal/qt_dataset_for_top10.csv", sep = ",", header = TRUE)
 
 DF <- data.frame(Threshold<-c(), Precision<-c(), Recall<-c(), TNrate<-c(), Accuracy<-c(), fm<-c())
 
+xmax = 1.0
+
 threshold = 0
-while(threshold < 4){
+while(threshold < xmax){
 	reviewers$futureIncurrent <- ifelse(reviewers$ExpertiseLevel < threshold, 1, 0)
 
 	# positive is prediction reviewer will incurrent
@@ -24,23 +26,23 @@ while(threshold < 4){
 	f <-  ifelse(recall+precision==0, 0,  2 * recall * precision / (recall + precision))
 
 	DF <- rbind(DF, data.frame(c(threshold), c(precision), c(recall), c(TNrate), c(Accuracy), c(f)))
-	threshold = threshold + 0.05
+	threshold = threshold + 0.01
 }
 
 write.csv(reviewers, "CSVdata_journal/futureIncurrent.csv", row.names=FALSE, quote=FALSE)
 
 pdf("pdf_journal/Precision.pdf")
-plot(DF$c.threshold., DF$c.precision., xlab="Threshold", ylab="Precision", xlim=c(0.0, 4.0), ylim=c(0.0, 1.0))
+plot(DF$c.threshold., DF$c.precision., xlab="Threshold", ylab="Precision", xlim=c(0.0, xmax), ylim=c(0.0, 1.0))
 
 pdf("pdf_journal/Recall.pdf")
-plot(DF$c.threshold., DF$c.recall., xlab="Threshold", ylab="Recall", xlim=c(0.0, 4.0), ylim=c(0.0, 1.0))
+plot(DF$c.threshold., DF$c.recall., xlab="Threshold", ylab="Recall", xlim=c(0.0, xmax), ylim=c(0.0, 1.0))
 
 pdf("pdf_journal/TNrate.pdf")
-plot(DF$c.threshold., DF$c.TNrate., xlab="Threshold", ylab="TNrate", xlim=c(0.0, 4.0), ylim=c(0.0, 1.0))
+plot(DF$c.threshold., DF$c.TNrate., xlab="Threshold", ylab="TNrate", xlim=c(0.0, xmax), ylim=c(0.0, 1.0))
 
 pdf("pdf_journal/Accuracy.pdf")
-plot(DF$c.threshold., DF$c.Accuracy., xlab="Threshold", ylab="Accuracy", xlim=c(0.0, 4.0), ylim=c(0.0, 1.0))
+plot(DF$c.threshold., DF$c.Accuracy., xlab="Threshold", ylab="Accuracy", xlim=c(0.0, xmax), ylim=c(0.0, 1.0))
 
 
 pdf("pdf_journal/f.pdf")
-plot(DF$c.threshold., DF$c.f., xlab="Threshold", ylab="f", xlim=c(0.0, 4.0), ylim=c(0.0, 1.0))
+plot(DF$c.threshold., DF$c.f., xlab="Threshold", ylab="f", xlim=c(0.0, xmax), ylim=c(0.0, 1.0))

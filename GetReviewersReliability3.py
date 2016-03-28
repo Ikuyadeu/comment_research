@@ -1,6 +1,7 @@
 ##################
 # Author:Ueda Yuki
 # Summary: This program is to count current judge and incurrent judge.
+# Usage: python GetReviewersReliability3.py "dbname" > CSVdata_journal/Qt2.csv
 ##################
 
 ### Import lib
@@ -9,7 +10,6 @@ import MySQLdb
 from collections import defaultdict
 from Util import ReviewerFunctions
 from Class import ReviewerClass
-import copy
 
 ### Init
 reviewer_class = defaultdict(lambda: 0)
@@ -46,7 +46,7 @@ ReviewNum = csr.fetchall()[0][0] # 70705 <= Number Of Qt project's patchsets
 # @VotingScore: the score that a reviewer voted. (+1 or -1)
 print "ReviewId, ReviewerId, CommentIndex, NumOfVotes, NumOfCurrent, NumOfincurrent, CurrentPar, IncurrentPar, ScoreOfReliability,  Case1, Case2, \
 LaterNumOfVotes, LatterNumOfCurrent, LatterNumOfincurrent, LatterCurrentPar, LatterIncurrentPar, LatterScoreOfReliability,  LatterCase1, LatterCase2, \
-VotingScore, Status, IncurrentVote" # print clumn name
+VotingScore, Status, IncurrentVote, IsFirstVoteIncurrent" # print clumn name
 
 for Id in range(1, ReviewNum):
 	sql = "SELECT ReviewId, Status \
@@ -74,7 +74,7 @@ for Id in range(1, ReviewNum):
 	for information in info:
 		status = information[1]
 
-	### Analysis
+	### Count CommentNum and Get first_score and reviewers
 	CommentNum = 0
 	for comment in comments:
 		reviewer = comment[1]
@@ -97,9 +97,7 @@ for Id in range(1, ReviewNum):
 				reviewers_first_score.append(s)
 				CommentNum += 1
 
-
 	assert CommentNum == len(reviewers_written)
-
 
 
 	# save information of firstVote and reset incurrent_vote
@@ -107,7 +105,6 @@ for Id in range(1, ReviewNum):
 		if not ReviewerFunctions.IsReviewerClass(r, reviewer_class):
 			ReviewerFunctions.MakeReviewerClass(r, reviewer_class)
 		reviewer = reviewer_class[r]
-		reviewer.incurrent_vote = 0
 		reviewer.saveFirst()
 
 	# collect all vote in comments
@@ -159,7 +156,10 @@ for Id in range(1, ReviewNum):
 			reviewer.addIncur()
 			reviewer.addCase(s)
 
-	# output information of firstVote
+	if len(reviewers_written) < 2 or Id < ReviewNum * 0.1:
+		continue
+
+	# output infor mation of firstVote
 	score = 0  # @score:ScoreOfReliabilitys
 	latter_score = 0
 	for index, (r, s) in enumerate(zip(reviewers_written, reviewers_first_score)):
@@ -172,12 +172,8 @@ for Id in range(1, ReviewNum):
 			currentPar = 0
 			incurrentPar = 0
 
-		# if reviewer.cur+reviewer.incur != 0:
 		latter_currentPar = float(reviewer.cur) / (reviewer.cur+reviewer.incur)
 		latter_incurrentPar = float(reviewer.incur) / (reviewer.cur+reviewer.incur)
-		# else:
-		# 	latter_currentPar = 0
-		# 	latter_incurrentPar = 0
 
 		score = score + currentPar
 		latter_score = latter_score + latter_currentPar
@@ -186,8 +182,8 @@ for Id in range(1, ReviewNum):
 
 		assert voteNum == reviewer.first_cur + reviewer.first_case1 + reviewer.first_case2
 		print "%4d, %d, %2d, %3d, %3d, %3d, %f, %f, %f, %d, %d,\
-		 %3d, %3d, %3d, %f, %f, %f, %d,%d, \
-		 %d, %s, %d" % \
+ %3d, %3d, %3d, %f, %f, %f, %d,%d, \
+ %d, %s, %d, %d" % \
 		(Id, r, index + 1, voteNum, reviewer.first_cur, reviewer.first_incur, currentPar, incurrentPar,score, reviewer.first_case1, reviewer.first_case2,\
 		 latter_voteNum, reviewer.cur, reviewer.incur, latter_currentPar, latter_incurrentPar, latter_score, reviewer.case1, reviewer.case2,\
-		 s, status, reviewer.incurrent_vote)
+		 s, status, reviewer.incurrent_vote, reviewer.is_first_vote_incurrent-1)
