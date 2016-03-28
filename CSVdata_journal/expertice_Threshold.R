@@ -25,7 +25,7 @@ while(threshold < 4){
 	f <-  ifelse(recall+precision==0, 0,  2 * recall * precision / (recall + precision))
 
 	DF <- rbind(DF, data.frame(c(threshold), c(precision), c(recall), c(TNrate), c(Accuracy), c(f)))
-	threshold = threshold + 0.01
+	threshold = threshold + 0.05
 }
 
 write.csv(reviewers, "CSVdata_journal/futureIncurrent.csv", row.names=FALSE, quote=FALSE)
