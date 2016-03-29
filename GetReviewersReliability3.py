@@ -46,7 +46,7 @@ ReviewNum = csr.fetchall()[0][0] # 70705 <= Number Of Qt project's patchsets
 # @VotingScore: the score that a reviewer voted. (+1 or -1)
 print "ReviewId, ReviewerId, CommentIndex, NumOfVotes, NumOfCurrent, NumOfincurrent, CurrentPar, IncurrentPar, ScoreOfReliability,  Case1, Case2, \
 LaterNumOfVotes, LatterNumOfCurrent, LatterNumOfincurrent, LatterCurrentPar, LatterIncurrentPar, LatterScoreOfReliability,  LatterCase1, LatterCase2, \
-VotingScore, Status, IncurrentVote, IsFirstVoteIncurrent" # print clumn name
+VotingScore, Status, IncurrentVote, IsFirstVoteIncurrent, CurrentChain" # print clumn name
 
 for Id in range(1, ReviewNum):
 	sql = "SELECT ReviewId, Status \
@@ -156,8 +156,8 @@ for Id in range(1, ReviewNum):
 			reviewer.addIncur()
 			reviewer.addCase(s)
 
-	if len(reviewers_written) < 2 or Id < ReviewNum * 0.1:
-		continue
+	# if len(reviewers_written) < 2 or Id < ReviewNum * 0.1:
+	# 	continue
 
 	# output infor mation of firstVote
 	score = 0  # @score:ScoreOfReliabilitys
@@ -183,7 +183,7 @@ for Id in range(1, ReviewNum):
 		assert voteNum == reviewer.first_cur + reviewer.first_case1 + reviewer.first_case2
 		print "%4d, %d, %2d, %3d, %3d, %3d, %f, %f, %f, %d, %d,\
  %3d, %3d, %3d, %f, %f, %f, %d,%d, \
- %d, %s, %d, %d" % \
+ %d, %s, %d, %d, %d" % \
 		(Id, r, index + 1, voteNum, reviewer.first_cur, reviewer.first_incur, currentPar, incurrentPar,score, reviewer.first_case1, reviewer.first_case2,\
 		 latter_voteNum, reviewer.cur, reviewer.incur, latter_currentPar, latter_incurrentPar, latter_score, reviewer.case1, reviewer.case2,\
-		 s, status, reviewer.incurrent_vote, reviewer.is_first_vote_incurrent-1)
+		 s, status, reviewer.incurrent_vote, reviewer.is_first_vote_incurrent-1, reviewer.first_current_chain)

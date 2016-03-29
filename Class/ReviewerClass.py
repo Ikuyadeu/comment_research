@@ -25,6 +25,8 @@ class Reviewer:
         self.flag = 0   # It means this whether or not this reviewer is focused on this research. # 1 means "focused"
         self.incurrent_vote = 0
         self.is_first_vote_incurrent = 0
+        self.current_chain = 0
+        self.first_current_chain = 0
 
     def saveFirst(self):
         self.first_cur = self.cur
@@ -33,16 +35,19 @@ class Reviewer:
         self.first_case2 = self.case2
         self.incurrent_vote = 0
         self.is_first_vote_incurrent = 0
+        self.first_current_chain = self.current_chain 
 
     def addCur(self):
         self.cur = self.cur + 1;
         self.p_list.append(1); ## 1 means "Current"
+        self.current_chain = self.current_chain + 1
         if self.is_first_vote_incurrent == 0:
             self.is_first_vote_incurrent = 1
 
     def addIncur(self):
         self.incur = self.incur + 1;
         self.p_list.append(0); ## 0 means "InCurrent"
+        self.current_chain = 0
         if self.is_first_vote_incurrent == 0:
             self.is_first_vote_incurrent = 2
 

@@ -1,9 +1,9 @@
 reviewers <- data.frame()
-reviewers <- read.csv("CSVdata_journal/qt_dataset_for_top10.csv", sep = ",", header = TRUE)
+reviewers <- read.csv("CSVdata_journal/merged_qt2.csv", sep = ",", header = TRUE)
 
-DF <- data.frame(Threshold<-c(), Precision<-c(), Recall<-c(), TNrate<-c(), Accuracy<-c(), fm<-c())
+DF <- data.frame(Threshold<-c(), Precision<-c(), Recall<-c(), TNrate<-c(), Accuracy<-c(), f<-c())
 
-xmax = 1.0
+xmax = 2.0
 
 threshold = 0
 while(threshold < xmax){
@@ -16,8 +16,8 @@ while(threshold < xmax){
 	# tp is prediction incurrent and real incurrent
 	tp = nrow(subset(positive, positive$IncurrentVote == 1))
 	fp = nrow(subset(positive, positive$IncurrentVote == 0))
-	tn = nrow(subset(negative, negative$IncurrentVote == 1))
-	fn = nrow(subset(negative, negative$IncurrentVote == 0))
+	fn = nrow(subset(negative, negative$IncurrentVote == 1))
+	tn = nrow(subset(negative, negative$IncurrentVote == 0))
 
 	precision <- ifelse(tp+fp==0, 0, tp / (tp + fp))
 	recall <- ifelse(tp+fn==0, 0, tp / (tp + fn))
@@ -26,10 +26,8 @@ while(threshold < xmax){
 	f <-  ifelse(recall+precision==0, 0,  2 * recall * precision / (recall + precision))
 
 	DF <- rbind(DF, data.frame(c(threshold), c(precision), c(recall), c(TNrate), c(Accuracy), c(f)))
-	threshold = threshold + 0.01
+	threshold = threshold + 0.05
 }
-
-write.csv(reviewers, "CSVdata_journal/futureIncurrent.csv", row.names=FALSE, quote=FALSE)
 
 pdf("pdf_journal/Precision.pdf")
 plot(DF$c.threshold., DF$c.precision., xlab="Threshold", ylab="Precision", xlim=c(0.0, xmax), ylim=c(0.0, 1.0))
